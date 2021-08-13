@@ -14,14 +14,14 @@ class EditNoteModel with ChangeNotifier {
   EditNoteModel({
     required this.note,
   }) {
-    nameController = TextEditingController(text: note.name);
+    nameController = TextEditingController(text: note.title);
     descriptionController = TextEditingController(text: note.description);
     color = note.color;
 
     nameController.addListener(() {
-      try{
+      try {
         notifyListeners();
-      }catch(_){}
+      } catch (_) {}
     });
   }
 
@@ -44,7 +44,7 @@ class EditNoteModel with ChangeNotifier {
 
   void save(BuildContext context) async {
     final newNote = note.edit(
-      name: nameController.text,
+      title: nameController.text,
       color: color,
       description: descriptionController.text,
     );

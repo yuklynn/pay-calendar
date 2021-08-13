@@ -4,7 +4,7 @@ import 'package:isar/isar.dart';
 class NoteCollection {
   @Id()
   int? id;
-  String? name;
+  String? title;
   int? color;
   String? description;
   bool? pin;

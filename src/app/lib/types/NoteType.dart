@@ -1,46 +1,41 @@
 import '../database/collections/note.dart';
 import '../theme.dart';
 
+/// ノートのデータ型
 class NoteType {
   final String? id;
-  final String name;
+  final String title;
   final int color;
   final String? description;
   final bool pin;
-  bool loaded;
 
+  /// コンストラクタ
   NoteType({
     this.id,
-    required this.name,
+    required this.title,
     int? color,
     this.description,
     this.pin = false,
-    this.loaded = false,
   }) : color = color ?? MainTheme.primaryColor.value;
 
-  NoteType.noLoad({required this.name, int? color, this.description})
-      : id = null,
-        color = color ?? MainTheme.primaryColor.value,
-        pin = false,
-        loaded = true;
-
+  /// DBのコレクションから作るデータ型
   NoteType.fromCollection(NoteCollection note)
       : id = note.id.toString(),
-        name = note.name!,
+        title = note.title!,
         color = note.color ?? MainTheme.primaryColor.value,
         description = note.description,
-        pin = note.pin!,
-        loaded = true;
+        pin = note.pin!;
 
+  /// データを変更するメソッド
   NoteType edit({
-    String? name,
+    String? title,
     int? color,
     String? description,
     bool? pin,
   }) =>
       NoteType(
         id: id,
-        name: name ?? this.name,
+        title: title ?? this.title,
         color: color ?? this.color,
         description: description ?? this.description,
         pin: pin ?? this.pin,

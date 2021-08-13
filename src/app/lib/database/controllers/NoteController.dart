@@ -52,7 +52,7 @@ class NoteController {
 
   static Future<NoteType?> put(NoteType newNote) async {
     final collection = NoteCollection()
-      ..name = newNote.name
+      ..title = newNote.title
       ..color = newNote.color
       ..description = newNote.description
       ..pin = newNote.pin;
@@ -68,7 +68,7 @@ class NoteController {
   static void putLastShown(NoteType note) async {
     final noteCollection = NoteCollection()
       ..id = int.parse(note.id!)
-      ..name = note.name
+      ..title = note.title
       ..color = note.color
       ..description = note.description
       ..pin = note.pin;

@@ -95,7 +95,7 @@ class _NoteDetail extends StatelessWidget {
       pinned: true,
       title: headerCollapsed
           ? Text(
-              note.name,
+              note.title,
               style: TextStyle(color: Colors.white),
             )
           : null,
@@ -123,7 +123,7 @@ class _NoteDetail extends StatelessWidget {
         children: [
           ListTile(
             title: Text(
-              note.name,
+              note.title,
               style: Theme.of(context).textTheme.headline6,
             ),
             trailing: OutlinedButton(

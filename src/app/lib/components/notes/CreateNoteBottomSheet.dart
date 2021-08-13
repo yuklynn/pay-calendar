@@ -38,7 +38,7 @@ class _CreateNoteBottomSheetState extends State<CreateNoteBottomSheet> {
             ? () {
                 Navigator.pop(
                   context,
-                  NoteType.noLoad(name: nameController.text),
+                  NoteType(title: nameController.text),
                 );
               }
             : null,

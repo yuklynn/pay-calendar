@@ -95,9 +95,9 @@ class _Notes extends StatelessWidget {
         foregroundColor: Colors.white,
       ),
       title: Text(
-        note.name,
+        note.title,
         style: TextStyle(
-          color: !note.loaded ? Theme.of(context).highlightColor : null,
+          color: note.id == null ? Theme.of(context).highlightColor : null,
         ),
       ),
       trailing: IconButton(

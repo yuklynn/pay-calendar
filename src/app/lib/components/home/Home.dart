@@ -151,7 +151,7 @@ class _Home extends StatelessWidget {
             backgroundColor: Color(note.color),
           ),
           title: Text(
-            note.name,
+            note.title,
             style: TextStyle(
               // 表示中なら太字
               fontWeight:

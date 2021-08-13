@@ -18,7 +18,7 @@ import 'package:flutter/widgets.dart';
 const _utf8Encoder = Utf8Encoder();
 
 final _schema =
-    '[{"name":"MemoCollection","idProperty":"id","properties":[{"name":"id","type":3},{"name":"noteId","type":3},{"name":"title","type":5},{"name":"cost","type":3},{"name":"date","type":3},{"name":"description","type":5}],"indexes":[],"links":[]},{"name":"NoteCollection","idProperty":"id","properties":[{"name":"id","type":3},{"name":"name","type":5},{"name":"color","type":3},{"name":"description","type":5},{"name":"pin","type":0}],"indexes":[],"links":[]},{"name":"LastShownNoteCollection","idProperty":"id","properties":[{"name":"id","type":3}],"indexes":[],"links":[{"name":"note","collection":"NoteCollection"}]}]';
+    '[{"name":"MemoCollection","idProperty":"id","properties":[{"name":"id","type":3},{"name":"noteId","type":3},{"name":"title","type":5},{"name":"cost","type":3},{"name":"date","type":3},{"name":"description","type":5}],"indexes":[],"links":[]},{"name":"NoteCollection","idProperty":"id","properties":[{"name":"id","type":3},{"name":"title","type":5},{"name":"color","type":3},{"name":"description","type":5},{"name":"pin","type":0}],"indexes":[],"links":[]},{"name":"LastShownNoteCollection","idProperty":"id","properties":[{"name":"id","type":3}],"indexes":[],"links":[{"name":"note","collection":"NoteCollection"}]}]';
 
 Future<Isar> openIsar(
     {String name = 'isar',
@@ -69,7 +69,7 @@ Future<Isar> openIsar(
           propertyOffsets: propertyOffsets.sublist(0, 5),
           propertyIds: {
             'id': 0,
-            'name': 1,
+            'title': 1,
             'color': 2,
             'description': 3,
             'pin': 4
@@ -208,12 +208,12 @@ class _NoteCollectionAdapter extends TypeAdapter<NoteCollection> {
     var dynamicSize = 0;
     final value0 = object.id;
     final _id = value0;
-    final value1 = object.name;
-    Uint8List? _name;
+    final value1 = object.title;
+    Uint8List? _title;
     if (value1 != null) {
-      _name = _utf8Encoder.convert(value1);
+      _title = _utf8Encoder.convert(value1);
     }
-    dynamicSize += _name?.length ?? 0;
+    dynamicSize += _title?.length ?? 0;
     final value2 = object.color;
     final _color = value2;
     final value3 = object.description;
@@ -243,7 +243,7 @@ class _NoteCollectionAdapter extends TypeAdapter<NoteCollection> {
     final buffer = rawObj.buffer.asTypedList(size);
     final writer = BinaryWriter(buffer, 35);
     writer.writeLong(offsets[0], _id);
-    writer.writeBytes(offsets[1], _name);
+    writer.writeBytes(offsets[1], _title);
     writer.writeLong(offsets[2], _color);
     writer.writeBytes(offsets[3], _description);
     writer.writeBool(offsets[4], _pin);
@@ -255,7 +255,7 @@ class _NoteCollectionAdapter extends TypeAdapter<NoteCollection> {
       BinaryReader reader, List<int> offsets) {
     final object = NoteCollection();
     object.id = reader.readLongOrNull(offsets[0]);
-    object.name = reader.readStringOrNull(offsets[1]);
+    object.title = reader.readStringOrNull(offsets[1]);
     object.color = reader.readLongOrNull(offsets[2]);
     object.description = reader.readStringOrNull(offsets[3]);
     object.pin = reader.readBoolOrNull(offsets[4]);
@@ -750,69 +750,70 @@ extension NoteCollectionQueryFilter
     ));
   }
 
-  QueryBuilder<NoteCollection, QAfterFilterCondition> nameIsNull() {
+  QueryBuilder<NoteCollection, QAfterFilterCondition> titleIsNull() {
     return addFilterCondition(FilterCondition(
       type: ConditionType.Eq,
-      property: 'name',
+      property: 'title',
       value: null,
     ));
   }
 
-  QueryBuilder<NoteCollection, QAfterFilterCondition> nameEqualTo(String? value,
+  QueryBuilder<NoteCollection, QAfterFilterCondition> titleEqualTo(
+      String? value,
       {bool caseSensitive = true}) {
     return addFilterCondition(FilterCondition(
       type: ConditionType.Eq,
-      property: 'name',
+      property: 'title',
       value: value,
       caseSensitive: caseSensitive,
     ));
   }
 
-  QueryBuilder<NoteCollection, QAfterFilterCondition> nameStartsWith(
+  QueryBuilder<NoteCollection, QAfterFilterCondition> titleStartsWith(
       String? value,
       {bool caseSensitive = true}) {
     final convertedValue = value;
     assert(convertedValue != null, 'Null values are not allowed');
     return addFilterCondition(FilterCondition(
       type: ConditionType.StartsWith,
-      property: 'name',
+      property: 'title',
       value: convertedValue,
       caseSensitive: caseSensitive,
     ));
   }
 
-  QueryBuilder<NoteCollection, QAfterFilterCondition> nameEndsWith(
+  QueryBuilder<NoteCollection, QAfterFilterCondition> titleEndsWith(
       String? value,
       {bool caseSensitive = true}) {
     final convertedValue = value;
     assert(convertedValue != null, 'Null values are not allowed');
     return addFilterCondition(FilterCondition(
       type: ConditionType.EndsWith,
-      property: 'name',
+      property: 'title',
       value: convertedValue,
       caseSensitive: caseSensitive,
     ));
   }
 
-  QueryBuilder<NoteCollection, QAfterFilterCondition> nameContains(
+  QueryBuilder<NoteCollection, QAfterFilterCondition> titleContains(
       String? value,
       {bool caseSensitive = true}) {
     final convertedValue = value;
     assert(convertedValue != null, 'Null values are not allowed');
     return addFilterCondition(FilterCondition(
       type: ConditionType.Matches,
-      property: 'name',
+      property: 'title',
       value: '*$convertedValue*',
       caseSensitive: caseSensitive,
     ));
   }
 
-  QueryBuilder<NoteCollection, QAfterFilterCondition> nameMatches(
+  QueryBuilder<NoteCollection, QAfterFilterCondition> titleMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return addFilterCondition(FilterCondition(
       type: ConditionType.Matches,
-      property: 'name',
+      property: 'title',
       value: pattern,
       caseSensitive: caseSensitive,
     ));
@@ -1124,12 +1125,12 @@ extension NoteCollectionQueryWhereSortBy
     return addSortByInternal('id', Sort.Desc);
   }
 
-  QueryBuilder<NoteCollection, QAfterSortBy> sortByName() {
-    return addSortByInternal('name', Sort.Asc);
+  QueryBuilder<NoteCollection, QAfterSortBy> sortByTitle() {
+    return addSortByInternal('title', Sort.Asc);
   }
 
-  QueryBuilder<NoteCollection, QAfterSortBy> sortByNameDesc() {
-    return addSortByInternal('name', Sort.Desc);
+  QueryBuilder<NoteCollection, QAfterSortBy> sortByTitleDesc() {
+    return addSortByInternal('title', Sort.Desc);
   }
 
   QueryBuilder<NoteCollection, QAfterSortBy> sortByColor() {
@@ -1167,12 +1168,12 @@ extension NoteCollectionQueryWhereSortThenBy
     return addSortByInternal('id', Sort.Desc);
   }
 
-  QueryBuilder<NoteCollection, QAfterSortBy> thenByName() {
-    return addSortByInternal('name', Sort.Asc);
+  QueryBuilder<NoteCollection, QAfterSortBy> thenByTitle() {
+    return addSortByInternal('title', Sort.Asc);
   }
 
-  QueryBuilder<NoteCollection, QAfterSortBy> thenByNameDesc() {
-    return addSortByInternal('name', Sort.Desc);
+  QueryBuilder<NoteCollection, QAfterSortBy> thenByTitleDesc() {
+    return addSortByInternal('title', Sort.Desc);
   }
 
   QueryBuilder<NoteCollection, QAfterSortBy> thenByColor() {
@@ -1257,9 +1258,9 @@ extension NoteCollectionQueryWhereDistinct
     return addDistinctByInternal('id');
   }
 
-  QueryBuilder<NoteCollection, QDistinct> distinctByName(
+  QueryBuilder<NoteCollection, QDistinct> distinctByTitle(
       {bool caseSensitive = true}) {
-    return addDistinctByInternal('name', caseSensitive: caseSensitive);
+    return addDistinctByInternal('title', caseSensitive: caseSensitive);
   }
 
   QueryBuilder<NoteCollection, QDistinct> distinctByColor() {
@@ -1316,8 +1317,8 @@ extension NoteCollectionQueryProperty
     return addPropertyName('id');
   }
 
-  QueryBuilder<String?, QQueryOperations> nameProperty() {
-    return addPropertyName('name');
+  QueryBuilder<String?, QQueryOperations> titleProperty() {
+    return addPropertyName('title');
   }
 
   QueryBuilder<int?, QQueryOperations> colorProperty() {

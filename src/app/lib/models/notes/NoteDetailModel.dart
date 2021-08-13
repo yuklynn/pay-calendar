@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../actions/notes/navigation.dart';
-import '../../database/controllers/NoteController.dart';
+import '../../isar/controllers/controller.dart';
 import '../../types/NoteType.dart';
 
 class NoteDetailModel with ChangeNotifier {

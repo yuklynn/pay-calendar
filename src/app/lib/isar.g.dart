@@ -1,19 +1,21 @@
 // ignore_for_file: unused_import, implementation_imports
 
-import 'dart:ffi';
 import 'dart:convert';
+import 'dart:ffi';
+import 'dart:io';
 import 'dart:isolate';
 import 'dart:typed_data';
-import 'dart:io';
+
+import 'package:ffi/ffi.dart';
+import 'package:flutter/widgets.dart';
 import 'package:isar/isar.dart';
 import 'package:isar/src/isar_native.dart';
 import 'package:isar/src/query_builder.dart';
-import 'package:ffi/ffi.dart';
 import 'package:path/path.dart' as p;
-import 'database/collections/memo.dart';
-import 'database/collections/note.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter/widgets.dart';
+
+import 'isar/collections/collection.dart';
+import 'isar/collections/collection.dart';
 
 const _utf8Encoder = Utf8Encoder();
 

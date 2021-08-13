@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 
+/// メモのIsarコレクション
 @Collection()
 class MemoCollection {
   @Id()

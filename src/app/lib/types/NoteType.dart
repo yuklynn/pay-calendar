@@ -1,4 +1,4 @@
-import '../database/collections/note.dart';
+import '../isar/collections/collection.dart';
 import '../theme.dart';
 
 /// ノートのデータ型

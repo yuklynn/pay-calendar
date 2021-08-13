@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pay_calendar/actions/memo/navigation.dart';
-import 'package:pay_calendar/database/controllers/MemoController.dart';
+import 'package:pay_calendar/isar/controllers/controller.dart';
 
 import '../../types/MemoType.dart';
 

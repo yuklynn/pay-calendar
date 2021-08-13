@@ -3,7 +3,7 @@ import 'package:isar/isar.dart';
 import '../../isar.g.dart';
 import '../../types/MemoType.dart';
 import '../../util/singleton.dart';
-import '../collections/memo.dart';
+import '../collections/collection.dart';
 
 class MemoController {
   static Future<MemoType?> get(String id) async {

@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../../actions/home/navigation.dart';
 import '../../actions/memo/navigation.dart';
-import '../../database/controllers/MemoController.dart';
-import '../../database/controllers/NoteController.dart';
+import '../../isar/controllers/controller.dart';
+import '../../isar/controllers/controller.dart';
 import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
 
@@ -27,7 +27,8 @@ class HomeModel with ChangeNotifier {
     final lastShownNote = await _getLastShownNote();
 
     this.pinnedNotes = pinnedNotes;
-    shownNote = lastShownNote ?? pinnedNotes.first;
+    shownNote =
+        lastShownNote ?? (pinnedNotes.isNotEmpty ? pinnedNotes.first : null);
     try {
       notifyListeners();
     } catch (_) {}

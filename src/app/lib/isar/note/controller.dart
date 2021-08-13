@@ -3,7 +3,7 @@ import 'package:isar/isar.dart';
 import '../../isar.g.dart';
 import '../../types/NoteType.dart';
 import '../../util/singleton.dart';
-import '../collections/note.dart';
+import '../collections/collection.dart';
 
 class NoteController {
   static Future<NoteType?> get(String id) async {

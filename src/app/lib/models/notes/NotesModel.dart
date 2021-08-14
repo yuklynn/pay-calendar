@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../actions/notes/navigation.dart';
-import '../../isar/controllers/controller.dart';
+import '../../isar/note/controller.dart';
 import '../../types/NoteType.dart';
 
 class NotesModel with ChangeNotifier {
@@ -19,7 +19,7 @@ class NotesModel with ChangeNotifier {
       notifyListeners();
     } catch (_) {}
 
-    final initVal = await NoteController.getAll();
+    final initVal = await NoteController().getAll();
     notes = initVal;
     loading = false;
     try {
@@ -37,7 +37,7 @@ class NotesModel with ChangeNotifier {
       notifyListeners();
     } catch (_) {}
 
-    final result = await NoteController.put(newNote);
+    final result = await NoteController().createOrUpdate(newNote);
     loading = false;
     if (result != null) notes.last = result;
     try {
@@ -52,7 +52,7 @@ class NotesModel with ChangeNotifier {
     } catch (_) {}
 
     final newNote = note.edit(pin: !note.pin);
-    final result = await NoteController.put(newNote);
+    final result = await NoteController().createOrUpdate(newNote);
 
     if (result != null) {
       final index = notes.indexWhere((element) => element.id == result.id);

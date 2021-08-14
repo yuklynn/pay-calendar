@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../actions/notes/navigation.dart';
-import '../../isar/controllers/controller.dart';
+import '../../isar/note/controller.dart';
 import '../../types/NoteType.dart';
 
 class NoteDetailModel with ChangeNotifier {
@@ -64,7 +64,7 @@ class NoteDetailModel with ChangeNotifier {
         notifyListeners();
       } catch (_) {}
 
-      final newNote = await NoteController.get(note.id!);
+      final newNote = await NoteController().get(int.parse(note.id!));
       if (newNote != null) this.note = newNote;
 
       loading = false;
@@ -78,7 +78,7 @@ class NoteDetailModel with ChangeNotifier {
     final ok = await showDeleteNoteDialog(context);
     if (!ok) return;
 
-    final success = await NoteController.delete(note.id!);
+    final success = await NoteController().delete(int.parse(note.id!));
     if (!success) return;
 
     Navigator.pop(context);

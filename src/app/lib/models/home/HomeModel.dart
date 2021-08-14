@@ -2,94 +2,106 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../actions/home/navigation.dart';
+import '../../actions/memo/isar_wrapper.dart';
 import '../../actions/memo/navigation.dart';
-import '../../isar/memo/controller.dart';
-import '../../isar/note/controller.dart';
+import '../../actions/notes/isar_wrapper.dart';
 import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
 
+/// ホーム画面のモデル
 class HomeModel with ChangeNotifier {
-  List<NoteType> pinnedNotes = [];
-  NoteType? shownNote;
-  List<MemoType> memos = [];
+  List<NoteType> pinnedNotes = []; // ピン留めされたノートのリスト
+  NoteType? shownNote; // 表示中のノート
+  List<MemoType> memos = []; // メモのリスト
 
+  /// コンストラクタ
   HomeModel() {
+    // 初期処理
     _init();
   }
 
+  /// 初期処理
   void _init() async {
-    await _initPinnedNotes();
-    _initMemos();
-  }
-
-  Future<void> _initPinnedNotes() async {
-    final pinnedNotes = await _getPinnedNotes();
-    final lastShownNote = await _getLastShownNote();
-
+    // ピン留めされたノートを取得
+    final pinnedNotes = await getPinnedNoteList();
+    if (pinnedNotes == null) return;
     this.pinnedNotes = pinnedNotes;
+
+    // 最後に表示したノートを取得
+    final lastShownNote = await getLastShownNote();
     shownNote =
         lastShownNote ?? (pinnedNotes.isNotEmpty ? pinnedNotes.first : null);
+
+    // メモを取得
+    if (shownNote != null) {
+      final memos = await getMemoList(shownNote!.id!);
+      if (memos != null) this.memos = memos;
+    }
+
     try {
       notifyListeners();
     } catch (_) {}
   }
 
-  void _initMemos() async {
-    if (shownNote == null) return;
-
-    final memos = await MemoController().getByNote(int.parse(shownNote!.id!));
-    this.memos = memos;
-    try {
-      notifyListeners();
-    } catch (_) {}
-  }
-
-  Future<List<NoteType>> _getPinnedNotes() async {
-    return await NoteController().getPinned();
-  }
-
-  Future<NoteType?> _getLastShownNote() async {
-    return await NoteController().getLastShown();
-  }
-
+  /// ピン留めされたノートをタップしたときの処理
   void onTapPinnedNote(NoteType note) async {
     // 最後に表示したノートを保存
-    NoteController().updateLastShown(note);
+    await updateLastShownNote(note);
 
     // 保存結果によらず値変更
     shownNote = note;
 
+    // メモを取得
+    final memos = await getMemoList(note.id.toString());
+    if (memos != null) this.memos = memos;
+
     try {
       notifyListeners();
     } catch (_) {}
-
-    // メモ取得
-    _initMemos();
   }
 
+  /// メモを作成する
   void createMemo(BuildContext context) async {
+    // 表示中のノートがないなら何もしない
+    if (shownNote == null) return;
+
+    // メモ作成画面に移動
     final newMemo = await toCreateMemo(context);
     if (newMemo == null) return;
 
-    final result = await MemoController()
-        .createOrUpdate(newMemo, int.parse(shownNote!.id!));
+    // メモを作成
+    final result = await createOrUpdateMemo(newMemo, shownNote!.id.toString());
     if (result == null) return;
 
+    // リストにメモを追加
     memos.add(result);
+
     try {
       notifyListeners();
     } catch (_) {}
   }
 
+  /// カレンダー機能に移動する
   void toCalendarFunc(BuildContext context) {
     toCalendar(context);
   }
 
+  /// ノート機能に移動する
   void toNote(BuildContext context) async {
+    // ノート画面に移動
     await toNotes(context);
-    _initPinnedNotes();
+
+    // 戻るときにピン止めされたノートを取得する
+    final pinnedNotes = await getPinnedNoteList();
+    if (pinnedNotes == null) return;
+    this.pinnedNotes = pinnedNotes;
+
+    try {
+      notifyListeners();
+    } catch (_) {}
   }
 
+  /// Providerを取得する
   static Widget provider(
     Widget Function(
       List<NoteType> pinnedNotes,

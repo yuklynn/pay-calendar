@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../theme.dart';
 import '../../util/colors.dart';
 import 'CommonBottomSheet.dart';
 import 'DisableScrollGlow.dart';
@@ -23,9 +22,9 @@ class ColorChoiceBottomSheet extends StatelessWidget {
   Widget _buildBody(BuildContext context) {
     return DisableScrollGlow(
       child: ListView.builder(
-        itemCount: FlowerColor.values.length,
+        itemCount: ThemeColor.values.length,
         itemBuilder: (context, index) {
-          final color = FlowerColor.values[index];
+          final color = ThemeColor.values[index];
 
           return ListTile(
             leading: CircleAvatar(

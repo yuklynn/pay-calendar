@@ -1,5 +1,5 @@
 import '../isar/note/collection.dart';
-import '../theme.dart';
+import '../util/theme.dart';
 
 /// ノートのデータ型
 class NoteType {

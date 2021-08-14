@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pay_calendar/components/common/CommonAppBar.dart';
 
 import '../../models/notes/EditNoteModel.dart';
 import '../../types/NoteType.dart';
 import '../../util/colors.dart';
+import '../common/CommonAppBar.dart';
 import '../common/DisableScrollGlow.dart';
 
 /// ノート編集画面
@@ -121,7 +121,7 @@ class _EditNote extends StatelessWidget {
         radius: 12.0,
         backgroundColor: Color(color),
       ),
-      title: Text(FlowerColorExtension.getName(color)),
+      title: Text(ThemeColorExtension.getName(color)),
       onTap: showColorChoice,
     );
   }

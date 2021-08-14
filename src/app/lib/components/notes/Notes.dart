@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../models/notes/NotesModel.dart';
-import '../../theme.dart';
 import '../../types/NoteType.dart';
+import '../../util/theme.dart';
 import '../common/CommonAppBar.dart';
 import '../common/DisableScrollGlow.dart';
 import '../common/ListBottomIndicator.dart';

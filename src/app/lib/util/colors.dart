@@ -1,29 +1,20 @@
 import 'package:flutter/material.dart';
 
-/// デフォルトカラー
-const defaultColor = 0xff6d888c;
-// const defaultColor = 0xff8aa2a9;
+/// テーマカラー
+const int ume = 0xffb40926; // 赤：梅
+const int tachibana = 0xffd7ad10; // 橙：橘
+const int kiku = 0xffffef20; // 黄：菊
+const int wakakusa = 0xff29905e; // 緑：若草
+const int asagao = 0xff2e6a87; // 青：朝顔
+const int sumire = 0xff692755; // 紫：すみれ
+const int momo = 0xffd35871; // 桃：桃
+const int unohana = 0xfffcfaf5; // 白：卯の花
+const int kurumi = 0xffc38458; // 茶：胡桃
+const defaultColor = 0xff6d888c; // デフォルトカラー
+// const defaultColor = 0xff8aa2a9; // デフォルトカラー
 
-/// 赤
-const int ume = 0xffb40926; // 梅
-/// 橙
-const int tachibana = 0xffd7ad10; // 橘
-/// 黄
-const int kiku = 0xffffef20; // 菊
-/// 緑
-const int wakakusa = 0xff29905e; // 若草
-/// 青
-const int asagao = 0xff2e6a87; // 朝顔
-/// 紫
-const int sumire = 0xff692755; // すみれ
-/// 桃
-const int momo = 0xffd35871; // 桃
-/// 白
-const int unohana = 0xfffcfaf5; // 卯の花
-/// 茶
-const int kurumi = 0xffc38458; // 胡桃
-
-enum FlowerColor {
+/// テーマカラーのenum
+enum ThemeColor {
   ume,
   tachibana,
   kiku,
@@ -35,53 +26,57 @@ enum FlowerColor {
   defaultColor,
 }
 
-extension FlowerColorExtension on FlowerColor {
+/// テーマカラー拡張
+extension ThemeColorExtension on ThemeColor {
+  /// 色のゲッター
   Color get color {
     switch (this) {
-      case FlowerColor.ume:
+      case ThemeColor.ume:
         return Color(ume);
-      case FlowerColor.tachibana:
+      case ThemeColor.tachibana:
         return Color(tachibana);
-      case FlowerColor.kiku:
+      case ThemeColor.kiku:
         return Color(kiku);
-      case FlowerColor.wakakusa:
+      case ThemeColor.wakakusa:
         return Color(wakakusa);
-      case FlowerColor.asagao:
+      case ThemeColor.asagao:
         return Color(asagao);
-      case FlowerColor.sumire:
+      case ThemeColor.sumire:
         return Color(sumire);
-      case FlowerColor.momo:
+      case ThemeColor.momo:
         return Color(momo);
-      case FlowerColor.kurumi:
+      case ThemeColor.kurumi:
         return Color(kurumi);
       default:
         return Color(defaultColor);
     }
   }
 
+  /// 色名のゲッター
   String get name {
     switch (this) {
-      case FlowerColor.ume:
+      case ThemeColor.ume:
         return 'Ume';
-      case FlowerColor.tachibana:
+      case ThemeColor.tachibana:
         return 'Tachibana';
-      case FlowerColor.kiku:
+      case ThemeColor.kiku:
         return 'Kiku';
-      case FlowerColor.wakakusa:
+      case ThemeColor.wakakusa:
         return 'Wakakusa';
-      case FlowerColor.asagao:
+      case ThemeColor.asagao:
         return 'Asagao';
-      case FlowerColor.sumire:
+      case ThemeColor.sumire:
         return 'Sumire';
-      case FlowerColor.momo:
+      case ThemeColor.momo:
         return 'Momo';
-      case FlowerColor.kurumi:
+      case ThemeColor.kurumi:
         return 'Kurumi';
       default:
         return 'Default color';
     }
   }
 
+  /// カラーコードから色名を取得する
   static String getName(int color) {
     switch (color) {
       case ume:
@@ -106,5 +101,5 @@ extension FlowerColorExtension on FlowerColor {
   }
 }
 
-const int dividerColor = 0xffe1e4e4;
-// const int dividerColor = 0xffc0c6c9;
+/// パーツの色
+const int dividerColor = 0xffe1e4e4; // 区切り線

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'components/Home/Home.dart';
-import 'theme.dart';
+import 'util/theme.dart';
 
 void main() {
   runApp(MainApp());

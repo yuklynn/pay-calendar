@@ -2,9 +2,11 @@ import 'package:isar/isar.dart';
 
 import '../isar.g.dart';
 
+/// 共通のシングルトン
 class CommonSingleton {
+  static Isar? _isar; // Isarインターフェース
+
   static CommonSingleton? _ins;
-  static Isar? _isar;
   const CommonSingleton._();
 
   factory CommonSingleton() {

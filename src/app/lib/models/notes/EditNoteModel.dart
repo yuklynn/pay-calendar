@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../actions/common/navigation.dart';
-import '../../database/controllers/NoteController.dart';
+import '../../isar/note/controller.dart';
 import '../../types/NoteType.dart';
 
 class EditNoteModel with ChangeNotifier {
@@ -48,7 +48,7 @@ class EditNoteModel with ChangeNotifier {
       color: color,
       description: descriptionController.text,
     );
-    final result = await NoteController.put(newNote);
+    final result = await NoteController().createOrUpdate(newNote);
     Navigator.pop(context, result != null);
   }
 

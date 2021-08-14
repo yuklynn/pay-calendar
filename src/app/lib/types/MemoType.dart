@@ -1,4 +1,4 @@
-import '../database/collections/memo.dart';
+import '../isar/memo/collection.dart';
 
 /// メモのデータ型
 class MemoType {

@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../../actions/home/navigation.dart';
 import '../../actions/memo/navigation.dart';
-import '../../database/controllers/MemoController.dart';
-import '../../database/controllers/NoteController.dart';
+import '../../isar/memo/controller.dart';
+import '../../isar/note/controller.dart';
 import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
 
@@ -27,7 +27,8 @@ class HomeModel with ChangeNotifier {
     final lastShownNote = await _getLastShownNote();
 
     this.pinnedNotes = pinnedNotes;
-    shownNote = lastShownNote ?? pinnedNotes.first;
+    shownNote =
+        lastShownNote ?? (pinnedNotes.isNotEmpty ? pinnedNotes.first : null);
     try {
       notifyListeners();
     } catch (_) {}
@@ -36,7 +37,7 @@ class HomeModel with ChangeNotifier {
   void _initMemos() async {
     if (shownNote == null) return;
 
-    final memos = await MemoController.getByNote(shownNote!.id!);
+    final memos = await MemoController().getByNote(int.parse(shownNote!.id!));
     this.memos = memos;
     try {
       notifyListeners();
@@ -44,16 +45,16 @@ class HomeModel with ChangeNotifier {
   }
 
   Future<List<NoteType>> _getPinnedNotes() async {
-    return await NoteController.getPinned();
+    return await NoteController().getPinned();
   }
 
   Future<NoteType?> _getLastShownNote() async {
-    return await NoteController.getLastShown();
+    return await NoteController().getLastShown();
   }
 
   void onTapPinnedNote(NoteType note) async {
     // 最後に表示したノートを保存
-    NoteController.putLastShown(note);
+    NoteController().updateLastShown(note);
 
     // 保存結果によらず値変更
     shownNote = note;
@@ -70,7 +71,8 @@ class HomeModel with ChangeNotifier {
     final newMemo = await toCreateMemo(context);
     if (newMemo == null) return;
 
-    final result = await MemoController.put(newMemo, shownNote!.id!);
+    final result = await MemoController()
+        .createOrUpdate(newMemo, int.parse(shownNote!.id!));
     if (result == null) return;
 
     memos.add(result);

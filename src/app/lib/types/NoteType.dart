@@ -1,4 +1,4 @@
-import '../database/collections/note.dart';
+import '../isar/note/collection.dart';
 import '../theme.dart';
 
 /// ノートのデータ型
@@ -19,12 +19,12 @@ class NoteType {
   }) : color = color ?? MainTheme.primaryColor.value;
 
   /// DBのコレクションから作るデータ型
-  NoteType.fromCollection(NoteCollection note)
-      : id = note.id.toString(),
-        title = note.title!,
-        color = note.color ?? MainTheme.primaryColor.value,
-        description = note.description,
-        pin = note.pin!;
+  NoteType.fromCollection(NoteCollection collection)
+      : id = collection.id.toString(),
+        title = collection.title!,
+        color = collection.color ?? MainTheme.primaryColor.value,
+        description = collection.description,
+        pin = collection.pin!;
 
   /// データを変更するメソッド
   NoteType edit({

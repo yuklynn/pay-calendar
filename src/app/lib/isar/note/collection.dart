@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 
+/// ノートのIsarコレクション
 @Collection()
 class NoteCollection {
   @Id()
@@ -10,6 +11,7 @@ class NoteCollection {
   bool? pin;
 }
 
+/// 最後に表示したノートのIsarコレクション
 @Collection()
 class LastShownNoteCollection {
   @Id()

@@ -10,8 +10,8 @@ import 'package:isar/src/isar_native.dart';
 import 'package:isar/src/query_builder.dart';
 import 'package:ffi/ffi.dart';
 import 'package:path/path.dart' as p;
-import 'database/collections/memo.dart';
-import 'database/collections/note.dart';
+import 'isar/memo/collection.dart';
+import 'isar/note/collection.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/widgets.dart';
 

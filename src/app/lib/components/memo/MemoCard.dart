@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pay_calendar/actions/memo/navigation.dart';
-import 'package:pay_calendar/database/controllers/MemoController.dart';
 
+import '../../actions/memo/navigation.dart';
+import '../../isar/memo/controller.dart';
 import '../../types/MemoType.dart';
 
 class MemoCard extends StatelessWidget {
@@ -125,7 +125,7 @@ class MemoCard extends StatelessWidget {
               child: Text('Delete'),
               value: () async {
                 final result = await showDeleteMemoDialog(context);
-                if (result) MemoController.delete(memo.id!);
+                if (result) MemoController().delete(int.parse(memo.id!));
               },
             ),
           ],

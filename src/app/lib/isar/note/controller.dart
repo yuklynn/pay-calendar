@@ -23,7 +23,9 @@ class NoteController {
   Future<NoteType?> get(int id) async {
     // 1件取得する
     final collection = await isar.noteCollections.get(id);
-    return collection != null ? NoteType.fromCollection(collection) : null;
+
+    if (collection == null) return null;
+    return NoteType.fromCollection(collection);
   }
 
   /// 一覧取得
@@ -60,7 +62,6 @@ class NoteController {
 
     if (collection == null) return null;
     if (collection.note.value == null) return null;
-
     return NoteType.fromCollection(collection.note.value!);
   }
 
@@ -82,7 +83,7 @@ class NoteController {
   }
 
   /// 最後に表示したノートを更新
-  void updateLastShown(NoteType note) async {
+  Future<void> updateLastShown(NoteType note) async {
     // Isarコレクションに変換
     final noteCollection = NoteCollection()
       ..id = int.parse(note.id!)

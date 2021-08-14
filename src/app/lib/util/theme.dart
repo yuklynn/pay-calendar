@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'util/colors.dart';
+import 'colors.dart';
 
+/// メインテーマ
 class MainTheme {
   final BuildContext context;
   static const primaryColor = Color(defaultColor);
 
   MainTheme(this.context);
 
+  /// テーマのゲッター
   ThemeData get theme => ThemeData(
         primaryColor: primaryColor,
         accentColor: primaryColor,
@@ -22,6 +24,7 @@ class MainTheme {
         appBarTheme: appBarTheme(context),
       );
 
+  /// アウトラインボタンのテーマ
   final outlinedButtonTheme = OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
       side: BorderSide(color: primaryColor),
@@ -30,10 +33,12 @@ class MainTheme {
     ),
   );
 
+  /// FABのテーマ
   final floatingActionButtonTheme = FloatingActionButtonThemeData(
     backgroundColor: primaryColor,
   );
 
+  /// テキストボタンのテーマ
   TextButtonThemeData textButtonTheme(BuildContext context) {
     return TextButtonThemeData(
       style: TextButton.styleFrom(
@@ -43,6 +48,7 @@ class MainTheme {
     );
   }
 
+  /// 塗りつぶしボタンのテーマ
   final elevatedButtonTheme = ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       primary: primaryColor,
@@ -50,11 +56,13 @@ class MainTheme {
     ),
   );
 
+  /// 区切り線のテーマ
   final dividerTheme = DividerThemeData(
     color: Color(dividerColor),
     space: 1.0,
   );
 
+  /// ヘッダーのテーマ
   AppBarTheme appBarTheme(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -67,6 +75,7 @@ class MainTheme {
     );
   }
 
+  /// アイコンのテーマ
   IconThemeData iconTheme() {
     return IconThemeData(
       color: primaryColor,

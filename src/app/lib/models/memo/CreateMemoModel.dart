@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../theme.dart';
 import '../../types/MemoType.dart';
+import '../../util/theme.dart';
 
 class CreateMemoModel with ChangeNotifier {
   late TextEditingController titleController;

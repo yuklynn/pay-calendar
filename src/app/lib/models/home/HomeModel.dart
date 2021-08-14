@@ -8,7 +8,7 @@ import '../../actions/notes/isar_wrapper.dart';
 import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
 
-/// ホーム画面のモデル
+/// ホーム画面のModel
 class HomeModel with ChangeNotifier {
   List<NoteType> pinnedNotes = []; // ピン留めされたノートのリスト
   NoteType? shownNote; // 表示中のノート

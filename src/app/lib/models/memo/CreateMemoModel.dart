@@ -4,13 +4,22 @@ import 'package:provider/provider.dart';
 import '../../types/MemoType.dart';
 import '../../util/theme.dart';
 
+/// メモ作成画面のModel
 class CreateMemoModel with ChangeNotifier {
-  late TextEditingController titleController;
-  late TextEditingController costController;
-  late TextEditingController descriptionController;
-  DateTime? date;
+  late TextEditingController titleController; // タイトル入力欄のコントローラー
+  late TextEditingController costController; // コスト入力欄のコントローラー
+  late TextEditingController descriptionController; // 説明入力欄のコントローラー
+  DateTime? date; // 日付
 
+  /// コンストラクタ
   CreateMemoModel() {
+    // 初期処理
+    _init();
+  }
+
+  /// 初期処理
+  void _init() {
+    // コントローラー初期化
     titleController = TextEditingController();
     costController = TextEditingController();
     descriptionController = TextEditingController();
@@ -26,9 +35,26 @@ class CreateMemoModel with ChangeNotifier {
         notifyListeners();
       } catch (_) {}
     });
+    descriptionController.addListener(() {
+      try {
+        notifyListeners();
+      } catch (_) {}
+    });
   }
 
+  @override
+  void dispose() {
+    // コントローラーを破棄
+    titleController.dispose();
+    costController.dispose();
+    descriptionController.dispose();
+
+    super.dispose();
+  }
+
+  /// 保存ボタンを押したときの処理
   void save(BuildContext context) {
+    // 入力内容をメモのデータ型に保存
     final newMemo = MemoType(
       title: titleController.text,
       cost: costController.text.isNotEmpty
@@ -37,10 +63,13 @@ class CreateMemoModel with ChangeNotifier {
       date: date,
       description: descriptionController.text,
     );
+
     Navigator.pop(context, newMemo);
   }
 
+  /// 日付を選択する
   void selectDate(BuildContext context) async {
+    // 日付選択を表示
     final newDate = await showDatePicker(
       context: context,
       initialDate: date ?? DateTime.now(),
@@ -59,15 +88,15 @@ class CreateMemoModel with ChangeNotifier {
         );
       },
     );
+    if (newDate == null) return;
 
-    if (newDate != null) {
-      date = newDate;
-      try {
-        notifyListeners();
-      } catch (_) {}
-    }
+    date = newDate;
+    try {
+      notifyListeners();
+    } catch (_) {}
   }
 
+  /// 選択した日付を削除する
   void deleteDate() {
     date = null;
     try {
@@ -75,15 +104,7 @@ class CreateMemoModel with ChangeNotifier {
     } catch (_) {}
   }
 
-  @override
-  void dispose() {
-    titleController.dispose();
-    costController.dispose();
-    descriptionController.dispose();
-
-    super.dispose();
-  }
-
+  /// Providerを取得する
   static Widget provider(
     Widget Function(
       TextEditingController,

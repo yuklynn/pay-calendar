@@ -2,7 +2,7 @@ import '../../isar/memo/controller.dart';
 import '../../types/MemoType.dart';
 
 /// メモ一覧を取得する
-Future<List<MemoType>?> getList(String noteId) async {
+Future<List<MemoType>?> getMemoList(String noteId) async {
   final controller = MemoController();
   try {
     final result = controller.getByNote(int.parse(noteId));

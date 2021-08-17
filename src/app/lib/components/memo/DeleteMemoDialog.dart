@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// メモ削除ダイアログの表示Widget
 class DeleteMemoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

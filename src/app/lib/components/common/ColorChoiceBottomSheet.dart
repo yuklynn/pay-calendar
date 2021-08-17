@@ -4,7 +4,7 @@ import '../../util/colors.dart';
 import 'CommonBottomSheet.dart';
 import 'DisableScrollGlow.dart';
 
-/// 色選択ボトムシート
+/// 色選択ボトムシートの表示Widget
 class ColorChoiceBottomSheet extends StatelessWidget {
   final int color;
 
@@ -19,6 +19,7 @@ class ColorChoiceBottomSheet extends StatelessWidget {
     );
   }
 
+  /// bodyをビルド
   Widget _buildBody(BuildContext context) {
     return DisableScrollGlow(
       child: ListView.builder(

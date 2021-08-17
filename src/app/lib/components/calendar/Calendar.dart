@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../common/CommonAppBar.dart';
 
+/// カレンダーの表示Widget
 class Calendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -16,31 +17,30 @@ class _Calendar extends StatelessWidget {
 
     return Scaffold(
       appBar: _buildAppBar(),
-      body: _buildCalendar(theme.textTheme),
+      body: _buildBody(theme.textTheme),
     );
   }
 
+  /// ヘッダーをビルド
   AppBar _buildAppBar() {
     return CommonAppBar(
       title: Text('Calendar'),
     );
   }
 
-  Widget _buildCalendar(TextTheme textTheme) {
+  /// body部をビルド
+  Widget _buildBody(TextTheme textTheme) {
     return Column(
       children: [
-        _weekRow(textTheme),
-        Expanded(child: _dateRow()),
-        Expanded(child: _dateRow()),
-        Expanded(child: _dateRow()),
-        Expanded(child: _dateRow()),
-        Expanded(child: _dateRow()),
-        Expanded(child: _dateRow()),
+        _buildCalendarHeader(textTheme),
+        Expanded(child: _buildCalendar()),
       ],
     );
   }
 
-  Widget _weekRow(TextTheme textTheme) {
+  /// カレンダーのヘッダー部分をビルド
+  Widget _buildCalendarHeader(TextTheme textTheme) {
+    // 曜日のテキスト配列
     final weekdays = [
       'S',
       'M',
@@ -58,6 +58,22 @@ class _Calendar extends StatelessWidget {
     );
   }
 
+  /// カレンダー部分をビルド
+  Widget _buildCalendar() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth / 7;
+        final height = constraints.maxHeight / 6;
+        return GridView.count(
+          crossAxisCount: 7,
+          childAspectRatio: width / height,
+          children: List.filled(7 * 6, _dateCell()),
+        );
+      },
+    );
+  }
+
+  /// 曜日のセル
   Widget _weekCell(String weekday, TextTheme textTheme) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -73,21 +89,9 @@ class _Calendar extends StatelessWidget {
     );
   }
 
-  Widget _dateRow() {
-    return Row(
-      children: [
-        Expanded(child: _dateCell()),
-        Expanded(child: _dateCell()),
-        Expanded(child: _dateCell()),
-        Expanded(child: _dateCell()),
-        Expanded(child: _dateCell()),
-        Expanded(child: _dateCell()),
-        Expanded(child: _dateCell()),
-      ],
-    );
-  }
-
+  /// 日付のセル
   Widget _dateCell() {
+    // todo: 中身
     return Container(
       decoration: BoxDecoration(
         border: Border.all(width: 0.1, color: Colors.grey),

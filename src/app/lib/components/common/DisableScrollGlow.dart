@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// オーバースクロールのエフェクトを無効かするWidget
+/// オーバースクロールのエフェクトを無効化するWidget
 class DisableScrollGlow extends StatelessWidget {
   final Widget child;
 

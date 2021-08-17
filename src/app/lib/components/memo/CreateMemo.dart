@@ -6,6 +6,7 @@ import '../common/CommonAppBar.dart';
 import '../common/DisableScrollGlow.dart';
 import 'parts/NumberTextField.dart';
 
+/// メモ作成画面の表示Widget
 class CreateMemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -33,13 +34,13 @@ class CreateMemo extends StatelessWidget {
 }
 
 class _CreateMemo extends StatelessWidget {
-  final TextEditingController titleController;
-  final TextEditingController costController;
-  final TextEditingController descriptionController;
-  final DateTime? date;
-  final VoidCallback save;
-  final VoidCallback selectDate;
-  final VoidCallback deleteDate;
+  final TextEditingController titleController; // タイトル入力欄のコントローラー
+  final TextEditingController costController; // 金額入力欄のコントローラー
+  final TextEditingController descriptionController; // 説明入力欄のコントローラー
+  final DateTime? date; // 日付
+  final VoidCallback save; // 保存処理
+  final VoidCallback selectDate; // 日付選択処理
+  final VoidCallback deleteDate; // 選択した日付を削除する処理
 
   _CreateMemo({
     required this.titleController,
@@ -59,6 +60,7 @@ class _CreateMemo extends StatelessWidget {
     );
   }
 
+  /// AppBarをビルド
   AppBar _buildAppBar() {
     return CommonAppBar(
       actions: [
@@ -76,6 +78,7 @@ class _CreateMemo extends StatelessWidget {
     );
   }
 
+  /// body部をビルド
   Widget _buildBody(BuildContext context) {
     final fields = <Widget>[
       _buildTitleFld(context),
@@ -93,6 +96,7 @@ class _CreateMemo extends StatelessWidget {
     );
   }
 
+  /// タイトル入力欄をビルド
   Widget _buildTitleFld(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -108,6 +112,7 @@ class _CreateMemo extends StatelessWidget {
     );
   }
 
+  /// 金額入力欄をビルド
   Widget _buildCostFld() {
     return ListTile(
       leading: const Icon(Icons.payment),
@@ -131,6 +136,7 @@ class _CreateMemo extends StatelessWidget {
     );
   }
 
+  /// 日付入力欄をビルド
   Widget _buildDateFld(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -152,6 +158,7 @@ class _CreateMemo extends StatelessWidget {
     );
   }
 
+  /// 説明入力欄をビルド
   Widget _buildDescriptionFld() {
     return ListTile(
       leading: const Icon(Icons.notes),

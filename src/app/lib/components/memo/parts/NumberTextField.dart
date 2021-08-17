@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+/// 数字入力欄の表示Widget
 class NumberTextField extends StatefulWidget {
-  final TextEditingController controller;
-  final String? hintText;
+  final TextEditingController controller; // コントローラー
+  final String? hintText; // ヒントテキスト
 
+  /// コンストラクタ
   NumberTextField({
     required this.controller,
     this.hintText,
@@ -18,13 +20,15 @@ class NumberTextField extends StatefulWidget {
 }
 
 class _NumberTextFieldState extends State<NumberTextField> {
-  String lastText = '';
+  String lastText = ''; // 最後に入力された文字列
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: widget.controller,
+      // 数字のみ入力可能
       keyboardType: TextInputType.number,
+      // 記号などを無効化、7桁まで入力可能
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(7),
@@ -51,7 +55,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
     );
   }
 
-  /// 桁が増えるとき
+  /// 桁が増えるときの処理
   void _onDigitIncrease(String text) {
     // 先頭・末尾からのカーソル位置を取得
     final head = widget.controller.value.selection.baseOffset;
@@ -90,7 +94,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
     });
   }
 
-  /// 桁が減るとき
+  /// 桁が減るときの処理
   void _onDigitDecrease(String text) {
     // 先頭・末尾からのカーソル位置を取得
     final head = widget.controller.value.selection.baseOffset;
@@ -133,7 +137,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
     });
   }
 
-  /// 桁が変わらないとき
+  /// 桁が変わらないときの処理
   void _onDigitRemain(String text) {
     // 先頭・末尾からのカーソル位置を取得
     final head = widget.controller.value.selection.baseOffset;
@@ -172,6 +176,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
     });
   }
 
+  /// カーソルが先頭のときの処理
   void _onCursorHead(String formatted) {
     widget.controller.value = TextEditingValue(
       text: formatted,
@@ -185,6 +190,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
     });
   }
 
+  /// カーソルが末尾のときの処理
   void _onCursorTail(String formatted) {
     widget.controller.value = TextEditingValue(
       text: formatted,

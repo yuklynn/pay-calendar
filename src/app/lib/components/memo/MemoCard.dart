@@ -5,11 +5,13 @@ import '../../actions/memo/navigation.dart';
 import '../../isar/memo/controller.dart';
 import '../../types/MemoType.dart';
 
+/// メモカードの表示Widget
 class MemoCard extends StatelessWidget {
-  final MemoType memo;
-  static const _buttonSize = 24.0;
-  static const _padding = 8.0;
+  final MemoType memo; // メモの情報
+  static const _buttonSize = 24.0; // ボタンサイズ
+  static const _padding = 8.0; // 余白サイズ
 
+  /// コンストラクタ
   MemoCard({
     required this.memo,
   });
@@ -43,6 +45,7 @@ class MemoCard extends StatelessWidget {
     );
   }
 
+  /// タイトルをビルドする
   Widget _buildTitle(TextTheme textTheme) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,6 +64,7 @@ class MemoCard extends StatelessWidget {
     );
   }
 
+  /// 完了ボタンをビルドする
   Widget _buildDoneButton() {
     return InkResponse(
       child: CircleAvatar(
@@ -73,6 +77,7 @@ class MemoCard extends StatelessWidget {
     );
   }
 
+  /// 金額欄をビルドする
   Widget _buildPayment(TextTheme textTheme) {
     final text = NumberFormat('#,###').format(memo.cost);
     final style = textTheme.subtitle1;
@@ -86,6 +91,7 @@ class MemoCard extends StatelessWidget {
     );
   }
 
+  /// 日付欄をビルドする
   Widget _buildDate(TextTheme textTheme) {
     final text = DateFormat.yMMMMd().format(memo.date!);
     final style = textTheme.subtitle1;
@@ -99,6 +105,7 @@ class MemoCard extends StatelessWidget {
     );
   }
 
+  /// 説明欄をビルドする
   Widget _buildDescription(TextTheme textTheme) {
     return Text(
       '${memo.description}',
@@ -106,6 +113,7 @@ class MemoCard extends StatelessWidget {
     );
   }
 
+  /// ポップアップボタンをビルドする
   Widget _buildPopupMenuButton() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),

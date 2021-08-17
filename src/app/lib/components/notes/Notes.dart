@@ -7,6 +7,7 @@ import '../common/CommonAppBar.dart';
 import '../common/DisableScrollGlow.dart';
 import '../common/ListBottomIndicator.dart';
 
+/// ノート一覧の表示Widget
 class Notes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -30,11 +31,11 @@ class Notes extends StatelessWidget {
 }
 
 class _Notes extends StatelessWidget {
-  final bool loading;
-  final List<NoteType> notes;
-  final VoidCallback createNote;
-  final void Function(NoteType) updatePin;
-  final void Function(NoteType) toDetail;
+  final bool loading; // ロード中か
+  final List<NoteType> notes; // ノートのリスト
+  final VoidCallback createNote; // ノート作成処理
+  final void Function(NoteType) updatePin; // ピン留め更新処理
+  final void Function(NoteType) toDetail; // ノート詳細画面に移動する処理
 
   _Notes({
     required this.loading,
@@ -53,12 +54,14 @@ class _Notes extends StatelessWidget {
     );
   }
 
+  /// AppBarをビルドする
   AppBar _buildAppBar() {
     return CommonAppBar(
       title: const Text('Notes'),
     );
   }
 
+  /// body部をビルドする
   Widget _buildBody() {
     return Column(
       children: [
@@ -73,6 +76,7 @@ class _Notes extends StatelessWidget {
     );
   }
 
+  /// リスト部をビルドする
   Widget _buildList() {
     return DisableScrollGlow(
       child: ListView.separated(
@@ -87,6 +91,7 @@ class _Notes extends StatelessWidget {
     );
   }
 
+  /// リスト1件をビルドする
   Widget _buildListTile(NoteType note, BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
@@ -109,6 +114,7 @@ class _Notes extends StatelessWidget {
     );
   }
 
+  /// FABをビルドする
   Widget _buildFAB() {
     return FloatingActionButton(
       onPressed: createNote,

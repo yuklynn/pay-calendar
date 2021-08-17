@@ -10,7 +10,8 @@ class CreateNoteBottomSheet extends StatefulWidget {
 }
 
 class _CreateNoteBottomSheetState extends State<CreateNoteBottomSheet> {
-  TextEditingController nameController = TextEditingController();
+  TextEditingController nameController =
+      TextEditingController(); // テキスト入力欄のコントローラー
 
   @override
   void dispose() {

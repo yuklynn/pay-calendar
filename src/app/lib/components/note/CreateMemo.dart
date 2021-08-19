@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../models/memo/CreateMemoModel.dart';
+import '../../models/note/CreateMemoModel.dart';
 import '../common/CommonAppBar.dart';
 import '../common/DisableScrollGlow.dart';
 import '../common/NumberTextField.dart';

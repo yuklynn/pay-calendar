@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../components/memo/CreateMemo.dart';
-import '../../components/memo/DeleteMemoDialog.dart';
+import '../../components/note/CreateMemo.dart';
+import '../../components/note/DeleteMemoDialog.dart';
 import '../../types/MemoType.dart';
 import '../../util/navigation_routes.dart';
 

@@ -6,7 +6,7 @@ import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
 import '../../util/functions.dart';
 import '../common/DisableScrollGlow.dart';
-import '../memo/MemoCard.dart';
+import 'src/MemoCard.dart';
 
 /// ノート詳細画面
 class NoteDetail extends StatelessWidget {

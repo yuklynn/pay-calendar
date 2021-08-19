@@ -6,7 +6,7 @@ import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
 import '../common/CommonAppBar.dart';
 import '../common/DisableScrollGlow.dart';
-import '../memo/MemoCard.dart';
+import '../note/src/MemoCard.dart';
 
 /// ホーム画面
 class Home extends StatelessWidget {

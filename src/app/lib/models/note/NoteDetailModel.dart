@@ -116,15 +116,17 @@ class NoteDetailModel with ChangeNotifier {
   /// メモを作成・編集する
   void _createOrUpdateMemo(MemoType? memo, BuildContext context) async {
     // メモ作成画面を表示
-    final memo = await toCreateMemo(context);
-    if (memo == null) return;
+    final newMemo = await toCreateMemo(memo, context);
+    if (newMemo == null) return;
 
     // メモを作成
-    final result = await createOrUpdateMemo(memo, note.id!);
+    final result = await createOrUpdateMemo(newMemo, note.id!);
     if (result == null) return;
 
     // メモのリストに追加
-    memos.add(result);
+    final index = memos.indexWhere((elem) => elem.id == result.id);
+
+    index < 0 ? memos.add(result) : memos[index] = result;
     try {
       notifyListeners();
     } catch (_) {}

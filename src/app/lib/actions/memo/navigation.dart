@@ -6,10 +6,10 @@ import '../../types/MemoType.dart';
 import '../../util/navigation_routes.dart';
 
 /// メモ作成画面に移動する
-Future<MemoType?> toCreateMemo(BuildContext context) async {
+Future<MemoType?> toCreateMemo(MemoType? memo, BuildContext context) async {
   return await Navigator.push<MemoType>(
     context,
-    NavigationRoute.dialog(page: CreateMemo()),
+    NavigationRoute.dialog(page: CreateMemo(memo: memo)),
   );
 }
 

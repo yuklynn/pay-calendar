@@ -66,7 +66,7 @@ class HomeModel with ChangeNotifier {
     if (shownNote == null) return;
 
     // メモ作成画面に移動
-    final newMemo = await toCreateMemo(context);
+    final newMemo = await toCreateMemo(null, context);
     if (newMemo == null) return;
 
     // メモを作成

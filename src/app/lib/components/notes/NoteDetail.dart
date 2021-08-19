@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../../models/notes/NoteDetailModel.dart';
+import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
+import '../../util/functions.dart';
 import '../common/DisableScrollGlow.dart';
-import '../common/ListBottomIndicator.dart';
+import '../memo/MemoCard.dart';
 
 /// ノート詳細画面
 class NoteDetail extends StatelessWidget {
@@ -17,20 +20,22 @@ class NoteDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return NoteDetailModel.provider(
       (
-        listenNote,
+        note,
+        memos,
         headerCollapsed,
         borderKey,
         scrollController,
-        toEdit,
+        edit,
         delete,
         loading,
       ) =>
           _NoteDetail(
-        note: listenNote,
+        note: note,
+        memos: memos,
         headerCollapsed: headerCollapsed,
         borderKey: borderKey,
         scrollController: scrollController,
-        toEdit: toEdit,
+        edit: edit,
         delete: delete,
         loading: loading,
       ),
@@ -40,20 +45,22 @@ class NoteDetail extends StatelessWidget {
 }
 
 class _NoteDetail extends StatelessWidget {
-  final NoteType note;
-  final bool headerCollapsed;
-  final GlobalKey borderKey;
-  final ScrollController scrollController;
-  final void Function(NoteType) toEdit;
-  final VoidCallback delete;
-  final bool loading;
+  final NoteType note; // ノートの情報
+  final List<MemoType> memos; // メモのリスト
+  final bool headerCollapsed; // ヘッダーが閉じているか
+  final GlobalKey borderKey; // ボーダーのKey
+  final ScrollController scrollController; // スクロールのコントローラー
+  final VoidCallback edit; // ノート編集処理
+  final VoidCallback delete; // ノート削除処理
+  final bool loading; // ロード中か
 
   _NoteDetail({
     required this.note,
+    required this.memos,
     required this.headerCollapsed,
     required this.borderKey,
     required this.scrollController,
-    required this.toEdit,
+    required this.edit,
     required this.delete,
     required this.loading,
   });
@@ -62,11 +69,10 @@ class _NoteDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: DisableScrollGlow(
-        child: CustomScrollView(
+        child: NestedScrollView(
           controller: scrollController,
-          slivers: [
-            // ヘッダー
-            _buildAppBar(context),
+          headerSliverBuilder: (context, __) => [
+            _buildAppBar(),
             SliverToBoxAdapter(
               child: LinearProgressIndicator(
                 value: !loading ? 0.0 : null,
@@ -77,17 +83,15 @@ class _NoteDetail extends StatelessWidget {
             SliverToBoxAdapter(
               child: Divider(key: borderKey),
             ),
-
-            // body
-            _buildBody(),
           ],
+          body: _buildBody(),
         ),
       ),
     );
   }
 
   /// ヘッダー
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildAppBar() {
     const height = 200.0;
     return SliverAppBar(
       backgroundColor: Color(note.color),
@@ -106,57 +110,103 @@ class _NoteDetail extends StatelessWidget {
           color: Color(note.color),
         ),
       ),
-      actions: [
-        IconButton(
-          onPressed: delete,
-          icon: const Icon(Icons.delete),
-        )
-      ],
     );
   }
 
-  /// ヘッダー下のタイトル部分
+  /// ヘッダー下のタイトル部分をビルドする
   Widget _buildAppBarBottom(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SliverToBoxAdapter(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ListTile(
-            title: Text(
-              note.title,
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            trailing: OutlinedButton(
-              onPressed: () => toEdit(note),
-              child: Text('Edit'), // todo:
-            ),
-          ),
+          _buildTitle(theme.textTheme),
           if (note.description?.isNotEmpty ?? false)
-            ListTile(
-              title: Text(
-                note.description!,
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle2!
-                    .copyWith(color: Colors.grey),
-              ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: _buildDescription(theme.textTheme),
             ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: _buildTotalPayment(theme.textTheme),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildBody() {
-    final list = <Widget>[];
-    for (var i in List.filled(20, null)) {
-      list.add(
-        ListTile(
-          title: Text('test_$i'),
-        ),
-      );
-      list.add(const Divider());
+  /// タイトルをビルドする
+  Widget _buildTitle(TextTheme textTheme) {
+    return ListTile(
+      title: Text(
+        note.title,
+        style: textTheme.headline6,
+      ),
+      trailing: _buildPopupMenu(),
+    );
+  }
+
+  /// 説明をビルドする
+  Widget _buildDescription(TextTheme textTheme) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Text(
+        note.description!,
+        style: textTheme.subtitle2!.copyWith(color: Colors.grey),
+      ),
+    );
+  }
+
+  /// 合計金額をビルドする
+  Widget _buildTotalPayment(TextTheme textTheme) {
+    var sum = 0;
+    for (var memo in memos) {
+      sum += memo.cost ?? 0;
     }
-    list.add(const ListBottomIndicator());
-    return SliverList(delegate: SliverChildListDelegate(list));
+
+    final style = textTheme.subtitle1;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('¥', style: style),
+          const SizedBox(width: 1.5),
+          Text(formatNumber(sum), style: style),
+        ],
+      ),
+    );
+  }
+
+  /// ポップアップメニューをビルドする
+  Widget _buildPopupMenu() {
+    return PopupMenuButton<VoidCallback>(
+      onSelected: (callback) => callback(),
+      itemBuilder: (_) => [
+        PopupMenuItem(
+          value: edit,
+          child: const Text('Edit'),
+        ),
+        PopupMenuItem(
+          value: delete,
+          child: const Text('Delete'),
+        ),
+      ],
+    );
+  }
+
+  /// ボディをビルドする
+  Widget _buildBody() {
+    return StaggeredGridView.countBuilder(
+      crossAxisCount: 2,
+      itemCount: memos.length,
+      itemBuilder: (context, index) => MemoCard(memo: memos[index]),
+      staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+      padding: EdgeInsets.only(
+        top: 8.0,
+        bottom: 100.0,
+      ),
+    );
   }
 }

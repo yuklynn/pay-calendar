@@ -16,9 +16,9 @@ class MemoController {
   }
 
   /// 初期処理
-  void _init() async {
+  void _init() {
     // Isarインターフェースを作る
-    isar = await CommonSingleton().isar;
+    isar = CommonSingleton().isar;
   }
 
   /// 1件取得

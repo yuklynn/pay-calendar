@@ -220,7 +220,11 @@ class _Home extends StatelessWidget {
     return StaggeredGridView.countBuilder(
       crossAxisCount: 2,
       itemCount: memos.length,
-      itemBuilder: (context, index) => MemoCard(memo: memos[index]),
+      itemBuilder: (context, index) => MemoCard(
+        memo: memos[index],
+        edit: (_) {},
+        delete: (_, __){},
+      ),
       staggeredTileBuilder: (index) => StaggeredTile.fit(1),
       padding: EdgeInsets.only(bottom: 100.0),
     );

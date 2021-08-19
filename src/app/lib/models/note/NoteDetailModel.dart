@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../actions/memo/isar_wrapper.dart';
+import '../../actions/memo/navigation.dart';
 import '../../actions/note/isar_wrapper.dart';
 import '../../actions/note/navigation.dart';
 import '../../types/MemoType.dart';
@@ -112,6 +113,31 @@ class NoteDetailModel with ChangeNotifier {
     Navigator.pop(context);
   }
 
+  /// メモを編集する
+  void editMemo(MemoType memo) async {
+    print('edit: ${memo.title}');
+  }
+
+  /// メモを削除する
+  void deleteMemoFromNote(MemoType memo, BuildContext context) async {
+    // ダイアログ表示
+    final ok = await showDeleteMemoDialog(context);
+    if (!ok) return;
+
+    // メモを削除
+    final success = await deleteMemo(memo.id!);
+    if (!success) return;
+
+    // メモのリストからメモを削除
+    final index = memos.indexWhere((elem) => elem.id == memo.id);
+    if (index < 0) return;
+
+    memos.removeAt(index);
+    try {
+      notifyListeners();
+    } catch (_) {}
+  }
+
   /// Providerを取得する
   static Widget provider(
     Widget Function(
@@ -123,6 +149,8 @@ class NoteDetailModel with ChangeNotifier {
       VoidCallback,
       VoidCallback,
       bool,
+      void Function(MemoType),
+      void Function(MemoType, BuildContext),
     )
         builder,
     NoteType note,
@@ -141,6 +169,10 @@ class NoteDetailModel with ChangeNotifier {
             () => context.read<NoteDetailModel>().edit(context),
             () => context.read<NoteDetailModel>().delete(context),
             model.loading,
+            (memo) => context.read<NoteDetailModel>().editMemo(memo),
+            (memo, context) => context
+                .read<NoteDetailModel>()
+                .deleteMemoFromNote(memo, context),
           ),
           onWillPop: () async {
             Navigator.pop(context, model.note);

@@ -28,6 +28,8 @@ class NoteDetail extends StatelessWidget {
         edit,
         delete,
         loading,
+        editMemo,
+        deleteMemo,
       ) =>
           _NoteDetail(
         note: note,
@@ -38,6 +40,8 @@ class NoteDetail extends StatelessWidget {
         edit: edit,
         delete: delete,
         loading: loading,
+        editMemo: editMemo,
+        deleteMemo: deleteMemo,
       ),
       note,
     );
@@ -54,6 +58,9 @@ class _NoteDetail extends StatelessWidget {
   final VoidCallback delete; // ノート削除処理
   final bool loading; // ロード中か
 
+  final void Function(MemoType) editMemo; // メモを編集する
+  final void Function(MemoType, BuildContext) deleteMemo; // メモを削除する
+
   _NoteDetail({
     required this.note,
     required this.memos,
@@ -63,6 +70,8 @@ class _NoteDetail extends StatelessWidget {
     required this.edit,
     required this.delete,
     required this.loading,
+    required this.editMemo,
+    required this.deleteMemo,
   });
 
   @override
@@ -122,11 +131,13 @@ class _NoteDetail extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildTitle(theme.textTheme),
-          if (note.description?.isNotEmpty ?? false)
+          if (note.description?.isNotEmpty ?? false) ...[
+            const SizedBox(height: 8.0),
             Align(
               alignment: Alignment.centerLeft,
               child: _buildDescription(theme.textTheme),
             ),
+          ],
           Align(
             alignment: Alignment.centerRight,
             child: _buildTotalPayment(theme.textTheme),
@@ -150,7 +161,7 @@ class _NoteDetail extends StatelessWidget {
   /// 説明をビルドする
   Widget _buildDescription(TextTheme textTheme) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Text(
         note.description!,
         style: textTheme.subtitle2!.copyWith(color: Colors.grey),
@@ -201,7 +212,11 @@ class _NoteDetail extends StatelessWidget {
     return StaggeredGridView.countBuilder(
       crossAxisCount: 2,
       itemCount: memos.length,
-      itemBuilder: (context, index) => MemoCard(memo: memos[index]),
+      itemBuilder: (context, index) => MemoCard(
+        memo: memos[index],
+        edit: editMemo,
+        delete: deleteMemo,
+      ),
       staggeredTileBuilder: (index) => StaggeredTile.fit(1),
       padding: EdgeInsets.only(
         top: 8.0,

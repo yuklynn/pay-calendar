@@ -6,23 +6,34 @@ import '../../util/theme.dart';
 
 /// メモ作成画面のModel
 class CreateMemoModel with ChangeNotifier {
+  MemoType? memo; // メモの情報(編集用)
+
   late TextEditingController titleController; // タイトル入力欄のコントローラー
   late TextEditingController costController; // コスト入力欄のコントローラー
   late TextEditingController descriptionController; // 説明入力欄のコントローラー
   DateTime? date; // 日付
 
   /// コンストラクタ
-  CreateMemoModel() {
+  CreateMemoModel({this.memo}) {
     // 初期処理
     _init();
   }
 
   /// 初期処理
   void _init() {
-    // コントローラー初期化
-    titleController = TextEditingController();
-    costController = TextEditingController();
-    descriptionController = TextEditingController();
+    // 値の初期化
+    titleController = TextEditingController.fromValue(
+      TextEditingValue(text: memo?.title ?? ''),
+    );
+    costController = TextEditingController.fromValue(
+      TextEditingValue(
+        text: (memo?.cost ?? '').toString(),
+      ),
+    );
+    descriptionController = TextEditingController.fromValue(
+      TextEditingValue(text: memo?.description ?? ''),
+    );
+    date = memo?.date;
 
     // 1文字ごとに入力を検知
     titleController.addListener(() {
@@ -56,6 +67,7 @@ class CreateMemoModel with ChangeNotifier {
   void save(BuildContext context) {
     // 入力内容をメモのデータ型に保存
     final newMemo = MemoType(
+      id: memo?.id,
       title: titleController.text,
       cost: costController.text.isNotEmpty
           ? int.parse(costController.text.replaceAll(',', ''))
@@ -116,9 +128,10 @@ class CreateMemoModel with ChangeNotifier {
       VoidCallback,
     )
         builder,
+    MemoType? memo,
   ) {
     return ChangeNotifierProvider(
-      create: (_) => CreateMemoModel(),
+      create: (_) => CreateMemoModel(memo: memo),
       builder: (context, _) {
         final model = context.watch<CreateMemoModel>();
         return builder(

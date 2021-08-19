@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../models/memo/CreateMemoModel.dart';
+import '../../models/note/CreateMemoModel.dart';
+import '../../types/MemoType.dart';
 import '../common/CommonAppBar.dart';
 import '../common/DisableScrollGlow.dart';
-import 'parts/NumberTextField.dart';
+import '../common/NumberTextField.dart';
 
 /// メモ作成画面の表示Widget
 class CreateMemo extends StatelessWidget {
+  final MemoType? memo; // メモの情報(編集用)
+
+  /// コンストラクタ
+  CreateMemo({this.memo});
+
   @override
   Widget build(BuildContext context) {
     return CreateMemoModel.provider(
@@ -29,6 +35,7 @@ class CreateMemo extends StatelessWidget {
         selectDate: selectDate,
         deleteDate: deleteDate,
       ),
+      memo,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pay_calendar/util/functions.dart';
 
 import '../../actions/memo/navigation.dart';
 import '../../isar/memo/controller.dart';
@@ -79,14 +80,13 @@ class MemoCard extends StatelessWidget {
 
   /// 金額欄をビルドする
   Widget _buildPayment(TextTheme textTheme) {
-    final text = NumberFormat('#,###').format(memo.cost);
     final style = textTheme.subtitle1;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text('¥', style: style),
         const SizedBox(width: 1.5),
-        Text(text, style: style),
+        Text(formatNumber(memo.cost!), style: style),
       ],
     );
   }

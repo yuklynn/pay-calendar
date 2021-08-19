@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../actions/memo/isar_wrapper.dart';
 import '../../actions/notes/isar_wrapper.dart';
 import '../../actions/notes/navigation.dart';
+import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
 
 /// ノート詳細画面のModel
 class NoteDetailModel with ChangeNotifier {
   NoteType note; // ノート
+  List<MemoType> memos = []; // メモのリスト
   bool headerCollapsed = false; // ヘッダーが閉じているか
   late GlobalKey borderKey; // ボーダーのKey
   late ScrollController scrollController; // スクロールのコントローラー
@@ -22,13 +25,22 @@ class NoteDetailModel with ChangeNotifier {
   }
 
   /// 初期処理
-  void _init() {
+  void _init() async {
     // キー作成
     borderKey = GlobalKey();
 
     // コントローラー作成
     scrollController = ScrollController();
     scrollController.addListener(_onScrolled);
+
+    // メモを取得
+    final memos = await getMemoList(note.id!);
+    if (memos == null) return;
+    this.memos = memos;
+
+    try {
+      notifyListeners();
+    } catch (_) {}
   }
 
   @override
@@ -67,7 +79,7 @@ class NoteDetailModel with ChangeNotifier {
   }
 
   /// ノートを編集する
-  void edit(BuildContext context, NoteType note) async {
+  void edit(BuildContext context) async {
     // ノート編集画面に移動する
     final edited = await toEditNote(context, note);
     if (!edited) return;
@@ -79,7 +91,7 @@ class NoteDetailModel with ChangeNotifier {
     } catch (_) {}
 
     final newNote = await getNote(note.id!);
-    if (newNote != null) this.note = newNote;
+    if (newNote != null) note = newNote;
 
     loading = false;
     try {
@@ -104,10 +116,11 @@ class NoteDetailModel with ChangeNotifier {
   static Widget provider(
     Widget Function(
       NoteType,
+      List<MemoType>,
       bool,
       GlobalKey,
       ScrollController,
-      void Function(NoteType),
+      VoidCallback,
       VoidCallback,
       bool,
     )
@@ -121,10 +134,11 @@ class NoteDetailModel with ChangeNotifier {
         return WillPopScope(
           child: builder(
             model.note,
+            model.memos,
             model.headerCollapsed,
             model.borderKey,
             model.scrollController,
-            (note) => context.read<NoteDetailModel>().edit(context, note),
+            () => context.read<NoteDetailModel>().edit(context),
             () => context.read<NoteDetailModel>().delete(context),
             model.loading,
           ),

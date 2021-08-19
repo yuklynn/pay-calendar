@@ -14,10 +14,10 @@ Future<MemoType?> toCreateMemo(BuildContext context) async {
 }
 
 /// メモ削除ダイアログを表示する
-Future<bool> showDeleteMemoDialog(BuildContext context) async {
+Future<bool> showDeleteMemoDialog(String title, BuildContext context) async {
   final result = await showDialog<bool>(
     context: context,
-    builder: (context) => DeleteMemoDialog(),
+    builder: (context) => DeleteMemoDialog(title: title),
   );
 
   return result ?? false;

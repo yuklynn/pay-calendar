@@ -133,7 +133,7 @@ class NoteDetailModel with ChangeNotifier {
   /// メモを削除する
   void _deleteMemo(MemoType memo, BuildContext context) async {
     // ダイアログ表示
-    final ok = await showDeleteMemoDialog(context);
+    final ok = await showDeleteMemoDialog(memo.title, context);
     if (!ok) return;
 
     // メモを削除

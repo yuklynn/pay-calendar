@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../../models/memo/CreateMemoModel.dart';
 import '../common/CommonAppBar.dart';
 import '../common/DisableScrollGlow.dart';
-import 'parts/NumberTextField.dart';
+import '../common/NumberTextField.dart';
 
 /// メモ作成画面の表示Widget
 class CreateMemo extends StatelessWidget {

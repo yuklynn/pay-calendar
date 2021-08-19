@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../util/functions.dart';
+import '../../util/functions.dart';
 
 /// 数字入力欄の表示Widget
 class NumberTextField extends StatefulWidget {

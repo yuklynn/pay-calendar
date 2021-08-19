@@ -16,9 +16,9 @@ class MemoController {
   }
 
   /// 初期処理
-  void _init() async {
+  void _init() {
     // Isarインターフェースを作る
-    isar = await CommonSingleton().isar;
+    isar = CommonSingleton().isar;
   }
 
   /// 1件取得
@@ -63,11 +63,12 @@ class MemoController {
 
   /// 1件削除
   Future<bool> delete(int id) async {
-    var success = false;
     await isar.writeTxn((isar) async {
-      success = await isar.memoCollections.delete(id);
+      await isar.memoCollections.delete(id);
     });
 
-    return success;
+    // なぜかdeleteはfalseを返すので取得できるかどうかを返す
+    final memo = await get(id);
+    return (memo == null);
   }
 }

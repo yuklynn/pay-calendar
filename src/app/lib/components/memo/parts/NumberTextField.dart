@@ -2,7 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
+
+import '../../../util/functions.dart';
 
 /// 数字入力欄の表示Widget
 class NumberTextField extends StatefulWidget {
@@ -62,7 +63,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
     final tail = text.length - head;
 
     // 数字をフォーマット
-    final formatted = NumberFormat('#,###').format(int.parse(text));
+    final formatted = formatNumber(int.parse(text));
     var offset = formatted.length - tail;
 
     // カーソルが先頭ならそのまま
@@ -101,7 +102,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
     final tail = text.length - head;
 
     // 数字をフォーマット
-    final formatted = NumberFormat('#,###').format(int.parse(text));
+    final formatted = formatNumber(int.parse(text));
     var offset = formatted.length - tail;
 
     // カーソルが先頭ならそのまま
@@ -144,7 +145,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
     final tail = text.length - head;
 
     // 数字をフォーマット
-    final formatted = NumberFormat('#,###').format(int.parse(text));
+    final formatted = formatNumber(int.parse(text));
     var offset = formatted.length - tail;
 
     // カーソルが先頭ならそのまま

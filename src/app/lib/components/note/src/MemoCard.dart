@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../actions/memo/navigation.dart';
-import '../../isar/memo/controller.dart';
-import '../../types/MemoType.dart';
+import '../../../types/MemoType.dart';
+import '../../../util/functions.dart';
 
 /// メモカードの表示Widget
 class MemoCard extends StatelessWidget {
   final MemoType memo; // メモの情報
+  final void Function(MemoType) edit; // メモを編集する
+  final void Function(MemoType) delete; // メモを削除する
   static const _buttonSize = 24.0; // ボタンサイズ
   static const _padding = 8.0; // 余白サイズ
 
   /// コンストラクタ
   MemoCard({
     required this.memo,
+    required this.edit,
+    required this.delete,
   });
 
   @override
@@ -31,10 +34,18 @@ class MemoCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildTitle(theme.textTheme),
-            if (memo.cost != null) _buildPayment(theme.textTheme),
-            if (memo.date != null) _buildDate(theme.textTheme),
-            if (memo.description?.isNotEmpty ?? true)
+            if (memo.cost != null) ...[
+              const SizedBox(height: 4.0),
+              _buildPayment(theme.textTheme),
+            ],
+            if (memo.date != null) ...[
+              const SizedBox(height: 4.0),
+              _buildDate(theme.textTheme),
+            ],
+            if (memo.description?.isNotEmpty ?? true) ...[
+              const SizedBox(height: 4.0),
               _buildDescription(theme.textTheme),
+            ],
             Align(
               alignment: Alignment.centerRight,
               child: _buildPopupMenuButton(),
@@ -79,14 +90,13 @@ class MemoCard extends StatelessWidget {
 
   /// 金額欄をビルドする
   Widget _buildPayment(TextTheme textTheme) {
-    final text = NumberFormat('#,###').format(memo.cost);
     final style = textTheme.subtitle1;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text('¥', style: style),
         const SizedBox(width: 1.5),
-        Text(text, style: style),
+        Text(formatNumber(memo.cost!), style: style),
       ],
     );
   }
@@ -127,14 +137,11 @@ class MemoCard extends StatelessWidget {
           itemBuilder: (context) => [
             PopupMenuItem(
               child: Text('Edit'),
-              value: () => print('edit'),
+              value: () => edit(memo),
             ),
             PopupMenuItem(
               child: Text('Delete'),
-              value: () async {
-                final result = await showDeleteMemoDialog(context);
-                if (result) MemoController().delete(int.parse(memo.id!));
-              },
+              value: () => delete(memo),
             ),
           ],
           onSelected: (callback) => callback(),

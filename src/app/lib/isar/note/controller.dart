@@ -15,8 +15,8 @@ class NoteController {
   }
 
   /// 初期処理
-  void _init() async {
-    isar = await CommonSingleton().isar;
+  void _init() {
+    isar = CommonSingleton().isar;
   }
 
   /// 1件取得

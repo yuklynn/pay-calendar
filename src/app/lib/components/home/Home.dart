@@ -6,7 +6,7 @@ import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
 import '../common/CommonAppBar.dart';
 import '../common/DisableScrollGlow.dart';
-import '../memo/MemoCard.dart';
+import '../note/src/MemoCard.dart';
 
 /// ホーム画面
 class Home extends StatelessWidget {
@@ -220,7 +220,11 @@ class _Home extends StatelessWidget {
     return StaggeredGridView.countBuilder(
       crossAxisCount: 2,
       itemCount: memos.length,
-      itemBuilder: (context, index) => MemoCard(memo: memos[index]),
+      itemBuilder: (context, index) => MemoCard(
+        memo: memos[index],
+        edit: (_) {},
+        delete: (_) {},
+      ),
       staggeredTileBuilder: (index) => StaggeredTile.fit(1),
       padding: EdgeInsets.only(bottom: 100.0),
     );

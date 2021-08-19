@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../actions/home/navigation.dart';
 import '../../actions/memo/isar_wrapper.dart';
 import '../../actions/memo/navigation.dart';
-import '../../actions/notes/isar_wrapper.dart';
+import '../../actions/note/isar_wrapper.dart';
 import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
 

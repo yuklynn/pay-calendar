@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../components/Notes/Notes.dart';
 import '../../components/calendar/Calendar.dart';
+import '../../components/note/Notes.dart';
 import '../../util/navigation_routes.dart';
 
 /// カレンダーに移動する

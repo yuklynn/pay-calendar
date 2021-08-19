@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../actions/common/navigation.dart';
-import '../../actions/notes/isar_wrapper.dart';
+import '../../actions/note/isar_wrapper.dart';
 import '../../types/NoteType.dart';
 
 /// ノート変更画面のModel

@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../components/notes/CreateNoteBottomSheet.dart';
-import '../../components/notes/DeleteNoteDialog.dart';
-import '../../components/notes/EditNote.dart';
-import '../../components/notes/NoteDetail.dart';
+import '../../components/note/CreateNoteBottomSheet.dart';
+import '../../components/note/DeleteNoteDialog.dart';
+import '../../components/note/EditNote.dart';
+import '../../components/note/NoteDetail.dart';
 import '../../types/NoteType.dart';
 import '../../util/navigation_routes.dart';
 

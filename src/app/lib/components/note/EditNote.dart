@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/notes/EditNoteModel.dart';
+import '../../models/note/EditNoteModel.dart';
 import '../../types/NoteType.dart';
 import '../../util/colors.dart';
 import '../common/CommonAppBar.dart';

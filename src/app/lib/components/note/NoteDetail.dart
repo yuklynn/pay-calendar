@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-import '../../models/notes/NoteDetailModel.dart';
+import '../../models/note/NoteDetailModel.dart';
 import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
 import '../../util/functions.dart';

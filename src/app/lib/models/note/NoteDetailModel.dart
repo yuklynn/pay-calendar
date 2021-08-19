@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../actions/memo/isar_wrapper.dart';
-import '../../actions/notes/isar_wrapper.dart';
-import '../../actions/notes/navigation.dart';
+import '../../actions/note/isar_wrapper.dart';
+import '../../actions/note/navigation.dart';
 import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
 

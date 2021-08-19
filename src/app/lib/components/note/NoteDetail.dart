@@ -28,7 +28,7 @@ class NoteDetail extends StatelessWidget {
         edit,
         delete,
         loading,
-        editMemo,
+        createOrUpdateMemo,
         deleteMemo,
       ) =>
           _NoteDetail(
@@ -40,7 +40,7 @@ class NoteDetail extends StatelessWidget {
         edit: edit,
         delete: delete,
         loading: loading,
-        editMemo: editMemo,
+        createOrUpdateMemo: createOrUpdateMemo,
         deleteMemo: deleteMemo,
       ),
       note,
@@ -58,8 +58,8 @@ class _NoteDetail extends StatelessWidget {
   final VoidCallback delete; // ノート削除処理
   final bool loading; // ロード中か
 
-  final void Function(MemoType) editMemo; // メモを編集する
-  final void Function(MemoType, BuildContext) deleteMemo; // メモを削除する
+  final void Function(MemoType?) createOrUpdateMemo; // メモを作成・編集する
+  final void Function(MemoType) deleteMemo; // メモを削除する
 
   _NoteDetail({
     required this.note,
@@ -70,7 +70,7 @@ class _NoteDetail extends StatelessWidget {
     required this.edit,
     required this.delete,
     required this.loading,
-    required this.editMemo,
+    required this.createOrUpdateMemo,
     required this.deleteMemo,
   });
 
@@ -96,6 +96,7 @@ class _NoteDetail extends StatelessWidget {
           body: _buildBody(),
         ),
       ),
+      floatingActionButton: _buildFAB(),
     );
   }
 
@@ -214,7 +215,7 @@ class _NoteDetail extends StatelessWidget {
       itemCount: memos.length,
       itemBuilder: (context, index) => MemoCard(
         memo: memos[index],
-        edit: editMemo,
+        edit: createOrUpdateMemo,
         delete: deleteMemo,
       ),
       staggeredTileBuilder: (index) => StaggeredTile.fit(1),
@@ -222,6 +223,14 @@ class _NoteDetail extends StatelessWidget {
         top: 8.0,
         bottom: 100.0,
       ),
+    );
+  }
+
+  /// FABをビルドする
+  Widget _buildFAB() {
+    return FloatingActionButton(
+      onPressed: () => createOrUpdateMemo(null),
+      child: const Icon(Icons.post_add),
     );
   }
 }

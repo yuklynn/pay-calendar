@@ -113,13 +113,25 @@ class NoteDetailModel with ChangeNotifier {
     Navigator.pop(context);
   }
 
-  /// メモを編集する
-  void editMemo(MemoType memo) async {
-    print('edit: ${memo.title}');
+  /// メモを作成・編集する
+  void _createOrUpdateMemo(MemoType? memo, BuildContext context) async {
+    // メモ作成画面を表示
+    final memo = await toCreateMemo(context);
+    if (memo == null) return;
+
+    // メモを作成
+    final result = await createOrUpdateMemo(memo, note.id!);
+    if (result == null) return;
+
+    // メモのリストに追加
+    memos.add(result);
+    try {
+      notifyListeners();
+    } catch (_) {}
   }
 
   /// メモを削除する
-  void deleteMemoFromNote(MemoType memo, BuildContext context) async {
+  void _deleteMemo(MemoType memo, BuildContext context) async {
     // ダイアログ表示
     final ok = await showDeleteMemoDialog(context);
     if (!ok) return;
@@ -149,8 +161,8 @@ class NoteDetailModel with ChangeNotifier {
       VoidCallback,
       VoidCallback,
       bool,
+      void Function(MemoType?),
       void Function(MemoType),
-      void Function(MemoType, BuildContext),
     )
         builder,
     NoteType note,
@@ -169,10 +181,11 @@ class NoteDetailModel with ChangeNotifier {
             () => context.read<NoteDetailModel>().edit(context),
             () => context.read<NoteDetailModel>().delete(context),
             model.loading,
-            (memo) => context.read<NoteDetailModel>().editMemo(memo),
-            (memo, context) => context
+            (memo) => context
                 .read<NoteDetailModel>()
-                .deleteMemoFromNote(memo, context),
+                ._createOrUpdateMemo(memo, context),
+            (memo) =>
+                context.read<NoteDetailModel>()._deleteMemo(memo, context),
           ),
           onWillPop: () async {
             Navigator.pop(context, model.note);

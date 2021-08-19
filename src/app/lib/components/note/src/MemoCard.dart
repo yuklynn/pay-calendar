@@ -8,7 +8,7 @@ import '../../../util/functions.dart';
 class MemoCard extends StatelessWidget {
   final MemoType memo; // メモの情報
   final void Function(MemoType) edit; // メモを編集する
-  final void Function(MemoType, BuildContext) delete; // メモを削除する
+  final void Function(MemoType) delete; // メモを削除する
   static const _buttonSize = 24.0; // ボタンサイズ
   static const _padding = 8.0; // 余白サイズ
 
@@ -141,7 +141,7 @@ class MemoCard extends StatelessWidget {
             ),
             PopupMenuItem(
               child: Text('Delete'),
-              value: () => delete(memo, context),
+              value: () => delete(memo),
             ),
           ],
           onSelected: (callback) => callback(),

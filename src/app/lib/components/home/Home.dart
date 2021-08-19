@@ -223,7 +223,7 @@ class _Home extends StatelessWidget {
       itemBuilder: (context, index) => MemoCard(
         memo: memos[index],
         edit: (_) {},
-        delete: (_, __){},
+        delete: (_) {},
       ),
       staggeredTileBuilder: (index) => StaggeredTile.fit(1),
       padding: EdgeInsets.only(bottom: 100.0),

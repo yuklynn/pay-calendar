@@ -15,4 +15,6 @@ class MemoCollection {
   DateTime? date;
 
   String? description;
+
+  bool? done;
 }

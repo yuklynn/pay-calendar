@@ -18,7 +18,7 @@ import 'package:flutter/widgets.dart';
 const _utf8Encoder = Utf8Encoder();
 
 final _schema =
-    '[{"name":"MemoCollection","idProperty":"id","properties":[{"name":"id","type":3},{"name":"noteId","type":3},{"name":"title","type":5},{"name":"cost","type":3},{"name":"date","type":3},{"name":"description","type":5}],"indexes":[],"links":[]},{"name":"NoteCollection","idProperty":"id","properties":[{"name":"id","type":3},{"name":"title","type":5},{"name":"color","type":3},{"name":"description","type":5},{"name":"pin","type":0}],"indexes":[],"links":[]},{"name":"LastShownNoteCollection","idProperty":"id","properties":[{"name":"id","type":3}],"indexes":[],"links":[{"name":"note","collection":"NoteCollection"}]}]';
+    '[{"name":"MemoCollection","idProperty":"id","properties":[{"name":"id","type":3},{"name":"noteId","type":3},{"name":"title","type":5},{"name":"cost","type":3},{"name":"date","type":3},{"name":"description","type":5},{"name":"done","type":0}],"indexes":[],"links":[]},{"name":"NoteCollection","idProperty":"id","properties":[{"name":"id","type":3},{"name":"title","type":5},{"name":"color","type":3},{"name":"description","type":5},{"name":"pin","type":0}],"indexes":[],"links":[]},{"name":"LastShownNoteCollection","idProperty":"id","properties":[{"name":"id","type":3}],"indexes":[],"links":[{"name":"note","collection":"NoteCollection"}]}]';
 
 Future<Isar> openIsar(
     {String name = 'isar',
@@ -34,8 +34,8 @@ Future<Isar> openIsar(
       schema: _schema,
       getCollections: (isar) {
         final collectionPtrPtr = malloc<Pointer>();
-        final propertyOffsetsPtr = malloc<Uint32>(6);
-        final propertyOffsets = propertyOffsetsPtr.asTypedList(6);
+        final propertyOffsetsPtr = malloc<Uint32>(7);
+        final propertyOffsets = propertyOffsetsPtr.asTypedList(7);
         final collections = <String, IsarCollection>{};
         nCall(IC.isar_get_collection(isar.ptr, collectionPtrPtr, 0));
         IC.isar_get_property_offsets(
@@ -44,14 +44,15 @@ Future<Isar> openIsar(
           isar: isar,
           adapter: _MemoCollectionAdapter(),
           ptr: collectionPtrPtr.value,
-          propertyOffsets: propertyOffsets.sublist(0, 6),
+          propertyOffsets: propertyOffsets.sublist(0, 7),
           propertyIds: {
             'id': 0,
             'noteId': 1,
             'title': 2,
             'cost': 3,
             'date': 4,
-            'description': 5
+            'description': 5,
+            'done': 6
           },
           indexIds: {},
           linkIds: {},
@@ -139,7 +140,9 @@ class _MemoCollectionAdapter extends TypeAdapter<MemoCollection> {
       _description = _utf8Encoder.convert(value5);
     }
     dynamicSize += _description?.length ?? 0;
-    final size = dynamicSize + 50;
+    final value6 = object.done;
+    final _done = value6;
+    final size = dynamicSize + 51;
 
     late int bufferSize;
     if (existingBufferSize != null) {
@@ -156,13 +159,14 @@ class _MemoCollectionAdapter extends TypeAdapter<MemoCollection> {
     }
     rawObj.buffer_length = size;
     final buffer = rawObj.buffer.asTypedList(size);
-    final writer = BinaryWriter(buffer, 50);
+    final writer = BinaryWriter(buffer, 51);
     writer.writeLong(offsets[0], _id);
     writer.writeLong(offsets[1], _noteId);
     writer.writeBytes(offsets[2], _title);
     writer.writeLong(offsets[3], _cost);
     writer.writeDateTime(offsets[4], _date);
     writer.writeBytes(offsets[5], _description);
+    writer.writeBool(offsets[6], _done);
     return bufferSize;
   }
 
@@ -176,6 +180,7 @@ class _MemoCollectionAdapter extends TypeAdapter<MemoCollection> {
     object.cost = reader.readLongOrNull(offsets[3]);
     object.date = reader.readDateTimeOrNull(offsets[4]);
     object.description = reader.readStringOrNull(offsets[5]);
+    object.done = reader.readBoolOrNull(offsets[6]);
     return object;
   }
 
@@ -194,6 +199,8 @@ class _MemoCollectionAdapter extends TypeAdapter<MemoCollection> {
         return (reader.readDateTimeOrNull(offset)) as P;
       case 5:
         return (reader.readStringOrNull(offset)) as P;
+      case 6:
+        return (reader.readBoolOrNull(offset)) as P;
       default:
         throw 'Illegal propertyIndex';
     }
@@ -704,6 +711,22 @@ extension MemoCollectionQueryFilter
       caseSensitive: caseSensitive,
     ));
   }
+
+  QueryBuilder<MemoCollection, QAfterFilterCondition> doneIsNull() {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'done',
+      value: null,
+    ));
+  }
+
+  QueryBuilder<MemoCollection, QAfterFilterCondition> doneEqualTo(bool? value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'done',
+      value: value,
+    ));
+  }
 }
 
 extension NoteCollectionQueryFilter
@@ -1062,6 +1085,14 @@ extension MemoCollectionQueryWhereSortBy
   QueryBuilder<MemoCollection, QAfterSortBy> sortByDescriptionDesc() {
     return addSortByInternal('description', Sort.Desc);
   }
+
+  QueryBuilder<MemoCollection, QAfterSortBy> sortByDone() {
+    return addSortByInternal('done', Sort.Asc);
+  }
+
+  QueryBuilder<MemoCollection, QAfterSortBy> sortByDoneDesc() {
+    return addSortByInternal('done', Sort.Desc);
+  }
 }
 
 extension MemoCollectionQueryWhereSortThenBy
@@ -1112,6 +1143,14 @@ extension MemoCollectionQueryWhereSortThenBy
 
   QueryBuilder<MemoCollection, QAfterSortBy> thenByDescriptionDesc() {
     return addSortByInternal('description', Sort.Desc);
+  }
+
+  QueryBuilder<MemoCollection, QAfterSortBy> thenByDone() {
+    return addSortByInternal('done', Sort.Asc);
+  }
+
+  QueryBuilder<MemoCollection, QAfterSortBy> thenByDoneDesc() {
+    return addSortByInternal('done', Sort.Desc);
   }
 }
 
@@ -1250,6 +1289,10 @@ extension MemoCollectionQueryWhereDistinct
       {bool caseSensitive = true}) {
     return addDistinctByInternal('description', caseSensitive: caseSensitive);
   }
+
+  QueryBuilder<MemoCollection, QDistinct> distinctByDone() {
+    return addDistinctByInternal('done');
+  }
 }
 
 extension NoteCollectionQueryWhereDistinct
@@ -1308,6 +1351,10 @@ extension MemoCollectionQueryProperty
 
   QueryBuilder<String?, QQueryOperations> descriptionProperty() {
     return addPropertyName('description');
+  }
+
+  QueryBuilder<bool?, QQueryOperations> doneProperty() {
+    return addPropertyName('done');
   }
 }
 

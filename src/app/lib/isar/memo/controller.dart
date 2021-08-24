@@ -52,7 +52,8 @@ class MemoController {
       ..title = memo.title
       ..cost = memo.cost
       ..date = memo.date
-      ..description = memo.description;
+      ..description = memo.description
+      ..done = memo.done;
     if (memo.id != null) collection.id = int.parse(memo.id!);
 
     await isar.writeTxn((isar) async {

@@ -132,6 +132,33 @@ class NoteDetailModel with ChangeNotifier {
     } catch (_) {}
   }
 
+  /// メモを完了する
+  void _doneMemo(MemoType memo) async {
+    // メモのデータ型を完了にする
+    final newMemo = memo.edit(done: true);
+
+    // メモを更新
+    final result = await createOrUpdateMemo(newMemo, note.id!);
+    if (result == null) return;
+
+    final index = memos.indexWhere((elem) => elem.id == newMemo.id);
+    if (index < 0) return;
+
+    // LikeButtonを使っているので不要
+    // 一瞬だけ置換する
+    // memos[index] = result;
+    // try {
+    //   notifyListeners();
+    // } catch (_) {}
+
+    // 少し待ってメモのリストから削除
+    await Future<void>.delayed(const Duration(milliseconds: 750));
+    memos.removeAt(index);
+    try {
+      notifyListeners();
+    } catch (_) {}
+  }
+
   /// メモを削除する
   void _deleteMemo(MemoType memo, BuildContext context) async {
     // ダイアログ表示
@@ -165,6 +192,7 @@ class NoteDetailModel with ChangeNotifier {
       bool,
       void Function(MemoType?),
       void Function(MemoType),
+      void Function(MemoType),
     )
         builder,
     NoteType note,
@@ -186,6 +214,7 @@ class NoteDetailModel with ChangeNotifier {
             (memo) => context
                 .read<NoteDetailModel>()
                 ._createOrUpdateMemo(memo, context),
+            (memo) => context.read<NoteDetailModel>()._doneMemo(memo),
             (memo) =>
                 context.read<NoteDetailModel>()._deleteMemo(memo, context),
           ),

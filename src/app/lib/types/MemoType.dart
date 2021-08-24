@@ -2,11 +2,23 @@ import '../isar/memo/collection.dart';
 
 /// メモのデータ型
 class MemoType {
+  /// ID
   final String? id;
+
+  /// タイトル
   final String title;
+
+  /// 金額
   final int? cost;
+
+  /// 日付
   final DateTime? date;
+
+  /// 説明
   final String? description;
+
+  /// 完了フラグ
+  final bool done;
 
   /// コンストラクタ
   MemoType({
@@ -15,15 +27,17 @@ class MemoType {
     this.cost,
     this.date,
     this.description,
+    this.done = false,
   });
 
   /// DBコレクションからデータを作るコンストラクタ
   MemoType.fromCollection(MemoCollection collection)
       : id = collection.id.toString(),
-        title = collection.title!,
+        title = collection.title ?? '',
         cost = collection.cost,
         date = collection.date,
-        description = collection.description;
+        description = collection.description,
+        done = collection.done ?? false;
 
   /// データを変更するメソッド
   MemoType edit({
@@ -31,6 +45,7 @@ class MemoType {
     int? cost,
     DateTime? date,
     String? description,
+    bool? done,
   }) =>
       MemoType(
         id: id,
@@ -38,5 +53,6 @@ class MemoType {
         cost: cost ?? this.cost,
         date: date ?? this.date,
         description: description ?? this.description,
+        done: done ?? this.done,
       );
 }

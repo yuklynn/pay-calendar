@@ -9,7 +9,7 @@ import '../../../util/functions.dart';
 class MemoCard extends StatelessWidget {
   final MemoType memo; // メモの情報
   final void Function(MemoType) edit; // メモを編集する
-  final void Function(MemoType) done; // メモを完了する
+  final void Function(MemoType, bool) updateStatus; // メモのステータスを変更する
   final void Function(MemoType) delete; // メモを削除する
   static const _padding = 8.0; // 余白サイズ
 
@@ -17,7 +17,7 @@ class MemoCard extends StatelessWidget {
   MemoCard({
     required this.memo,
     required this.edit,
-    required this.done,
+    required this.updateStatus,
     required this.delete,
   });
 
@@ -80,29 +80,32 @@ class MemoCard extends StatelessWidget {
 
   /// 完了ボタンをビルドする
   Widget _buildDoneButton(ThemeData theme) {
+    final effectColor = !memo.done ? theme.primaryColorDark : Colors.grey;
     return LikeButton(
       // todo: color
       circleColor: CircleColor(
-        start: theme.primaryColorDark,
-        end: theme.primaryColorDark,
+        start: effectColor,
+        end: effectColor,
       ),
       bubblesColor: BubblesColor(
-        dotPrimaryColor: theme.primaryColorDark,
-        dotSecondaryColor: theme.primaryColorDark,
+        dotPrimaryColor: effectColor,
+        dotSecondaryColor: effectColor,
       ),
       likeBuilder: (liked) {
-        final color = memo.done || liked ? theme.primaryColorDark : Colors.grey;
+        final like = !memo.done ? liked : !liked;
+        final iconColor = like ? theme.primaryColorDark : Colors.grey;
         return CircleAvatar(
-          backgroundColor: color,
+          backgroundColor: iconColor,
           foregroundColor: Colors.white,
           child: const Icon(
             Icons.done,
           ),
         );
       },
-      onTap: (liked) async {
-        done(memo);
-        return !liked;
+      isLiked: false,
+      onTap: (_) async {
+        updateStatus(memo, !memo.done);
+        return true;
       },
     );
   }

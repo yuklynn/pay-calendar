@@ -44,7 +44,6 @@ class MemoController {
     // メモのデータ型のリストに変換
     final list = <MemoType>[];
     for (var collection in collections) {
-      print('${collection.title}: ${collection.done}');
       list.add(MemoType.fromCollection(collection));
     }
     return list;

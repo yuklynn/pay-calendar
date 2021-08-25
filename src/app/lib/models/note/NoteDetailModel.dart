@@ -133,10 +133,10 @@ class NoteDetailModel with ChangeNotifier {
     } catch (_) {}
   }
 
-  /// メモを完了する
-  void _doneMemo(MemoType memo) async {
+  /// メモのステータスを変更する
+  void updateMemoStatus(MemoType memo, bool done) async {
     // メモのデータ型を完了にする
-    final newMemo = memo.edit(done: true);
+    final newMemo = memo.edit(done: done);
 
     // メモを更新
     final result = await createOrUpdateMemo(newMemo, note.id!);
@@ -180,6 +180,24 @@ class NoteDetailModel with ChangeNotifier {
     } catch (_) {}
   }
 
+  /// 表示メモのステータスを変更する
+  void switchShownMemoStatus(bool status) async {
+    // ステータスに変更なしなら何もしない
+    if (memoStatus == status) return;
+
+    // ステータス変更
+    memoStatus = status;
+
+    // メモを再取得
+    final result = await getMemoList(note.id!, done: status);
+    if (result == null) return;
+
+    memos = result;
+    try {
+      notifyListeners();
+    } catch (_) {}
+  }
+
   /// Providerを取得する
   static Widget provider(
     Widget Function(
@@ -192,8 +210,10 @@ class NoteDetailModel with ChangeNotifier {
       VoidCallback,
       bool,
       void Function(MemoType?),
+      void Function(MemoType, bool),
       void Function(MemoType),
-      void Function(MemoType),
+      bool shownMemoStatus,
+      void Function(bool),
     )
         builder,
     NoteType note,
@@ -215,9 +235,13 @@ class NoteDetailModel with ChangeNotifier {
             (memo) => context
                 .read<NoteDetailModel>()
                 ._createOrUpdateMemo(memo, context),
-            (memo) => context.read<NoteDetailModel>()._doneMemo(memo),
+            (memo, done) =>
+                context.read<NoteDetailModel>().updateMemoStatus(memo, done),
             (memo) =>
                 context.read<NoteDetailModel>()._deleteMemo(memo, context),
+            model.memoStatus,
+            (status) =>
+                context.read<NoteDetailModel>().switchShownMemoStatus(status),
           ),
           onWillPop: () async {
             Navigator.pop(context, model.note);

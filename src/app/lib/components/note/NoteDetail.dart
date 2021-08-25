@@ -29,8 +29,10 @@ class NoteDetail extends StatelessWidget {
         delete,
         loading,
         createOrUpdateMemo,
-        doneMemo,
+        updateMemoStatus,
         deleteMemo,
+        shownMemoStatus,
+        switchShownMemoStatus,
       ) =>
           _NoteDetail(
         note: note,
@@ -42,8 +44,10 @@ class NoteDetail extends StatelessWidget {
         delete: delete,
         loading: loading,
         createOrUpdateMemo: createOrUpdateMemo,
-        doneMemo: doneMemo,
+        updateMemoStatus: updateMemoStatus,
         deleteMemo: deleteMemo,
+        shownMemoStatus: shownMemoStatus,
+        switchShownMemoStatus: switchShownMemoStatus,
       ),
       note,
     );
@@ -61,8 +65,10 @@ class _NoteDetail extends StatelessWidget {
   final bool loading; // ロード中か
 
   final void Function(MemoType?) createOrUpdateMemo; // メモを作成・編集する
-  final void Function(MemoType) doneMemo; // メモを完了する
+  final void Function(MemoType, bool) updateMemoStatus; // メモのステータスを変更する
   final void Function(MemoType) deleteMemo; // メモを削除する
+  final bool shownMemoStatus; // 表示中のメモのステータス
+  final void Function(bool) switchShownMemoStatus; // 表示するメモのステータスを変更する
 
   _NoteDetail({
     required this.note,
@@ -74,8 +80,10 @@ class _NoteDetail extends StatelessWidget {
     required this.delete,
     required this.loading,
     required this.createOrUpdateMemo,
-    required this.doneMemo,
+    required this.updateMemoStatus,
     required this.deleteMemo,
+    required this.shownMemoStatus,
+    required this.switchShownMemoStatus,
   });
 
   @override
@@ -135,7 +143,7 @@ class _NoteDetail extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildTitle(theme.textTheme),
+          _buildTitle(theme),
           if (note.description?.isNotEmpty ?? false) ...[
             const SizedBox(height: 8.0),
             Align(
@@ -153,13 +161,51 @@ class _NoteDetail extends StatelessWidget {
   }
 
   /// タイトルをビルドする
-  Widget _buildTitle(TextTheme textTheme) {
+  Widget _buildTitle(ThemeData theme) {
     return ListTile(
       title: Text(
         note.title,
-        style: textTheme.headline6,
+        style: theme.textTheme.headline6,
       ),
-      trailing: _buildPopupMenu(),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildMemoStatusButton(theme),
+          _buildPopupMenu(),
+        ],
+      ),
+    );
+  }
+
+  /// メモのステータス切り替えボタンをビルドする
+  Widget _buildMemoStatusButton(ThemeData theme) {
+    final color = theme.primaryColor;
+    return DropdownButtonHideUnderline(
+      child: Container(
+        padding: const EdgeInsets.only(left: 8.0),
+        decoration: BoxDecoration(
+          border: Border.all(color: color),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: DropdownButton<bool>(
+          value: shownMemoStatus,
+          onChanged: (value) {
+            if (value == null) return;
+            switchShownMemoStatus(value);
+          },
+          items: [
+            DropdownMenuItem(
+              child: Text('UNDONE', style: TextStyle(color: color)),
+              value: false,
+            ),
+            DropdownMenuItem(
+              child: Text('DONE', style: TextStyle(color: color)),
+              value: true,
+            ),
+          ],
+          iconEnabledColor: color,
+        ),
+      ),
     );
   }
 
@@ -178,9 +224,7 @@ class _NoteDetail extends StatelessWidget {
   Widget _buildTotalPayment(TextTheme textTheme) {
     var sum = 0;
     for (var memo in memos) {
-      if (!memo.done) {
-        sum += memo.cost ?? 0;
-      }
+      sum += memo.cost ?? 0;
     }
 
     final style = textTheme.subtitle1;
@@ -222,7 +266,7 @@ class _NoteDetail extends StatelessWidget {
       itemBuilder: (context, index) => MemoCard(
         memo: memos[index],
         edit: createOrUpdateMemo,
-        done: doneMemo,
+        updateStatus: updateMemoStatus,
         delete: deleteMemo,
       ),
       staggeredTileBuilder: (index) => StaggeredTile.fit(1),

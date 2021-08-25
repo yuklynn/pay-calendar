@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:like_button/like_button.dart';
 
 import '../../../types/MemoType.dart';
 import '../../../util/functions.dart';
@@ -8,14 +9,15 @@ import '../../../util/functions.dart';
 class MemoCard extends StatelessWidget {
   final MemoType memo; // メモの情報
   final void Function(MemoType) edit; // メモを編集する
+  final void Function(MemoType) done; // メモを完了する
   final void Function(MemoType) delete; // メモを削除する
-  static const _buttonSize = 24.0; // ボタンサイズ
   static const _padding = 8.0; // 余白サイズ
 
   /// コンストラクタ
   MemoCard({
     required this.memo,
     required this.edit,
+    required this.done,
     required this.delete,
   });
 
@@ -33,7 +35,7 @@ class MemoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildTitle(theme.textTheme),
+            _buildTitle(theme),
             if (memo.cost != null) ...[
               const SizedBox(height: 4.0),
               _buildPayment(theme.textTheme),
@@ -57,16 +59,17 @@ class MemoCard extends StatelessWidget {
   }
 
   /// タイトルをビルドする
-  Widget _buildTitle(TextTheme textTheme) {
+  Widget _buildTitle(ThemeData theme) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildDoneButton(),
+        _buildDoneButton(theme),
         const SizedBox(width: 4.0),
         Expanded(
           child: Text(
             memo.title,
-            style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.subtitle1!
+                .copyWith(fontWeight: FontWeight.bold),
             overflow: TextOverflow.ellipsis,
             maxLines: 3,
           ),
@@ -76,15 +79,31 @@ class MemoCard extends StatelessWidget {
   }
 
   /// 完了ボタンをビルドする
-  Widget _buildDoneButton() {
-    return InkResponse(
-      child: CircleAvatar(
-        radius: _buttonSize / 2,
-        child: const Icon(
-          Icons.done,
-          size: (_buttonSize - 4),
-        ),
+  Widget _buildDoneButton(ThemeData theme) {
+    return LikeButton(
+      // todo: color
+      circleColor: CircleColor(
+        start: theme.primaryColorDark,
+        end: theme.primaryColorDark,
       ),
+      bubblesColor: BubblesColor(
+        dotPrimaryColor: theme.primaryColorDark,
+        dotSecondaryColor: theme.primaryColorDark,
+      ),
+      likeBuilder: (liked) {
+        final color = memo.done || liked ? theme.primaryColorDark : Colors.grey;
+        return CircleAvatar(
+          backgroundColor: color,
+          foregroundColor: Colors.white,
+          child: const Icon(
+            Icons.done,
+          ),
+        );
+      },
+      onTap: (liked) async {
+        done(memo);
+        return !liked;
+      },
     );
   }
 

@@ -2,10 +2,10 @@ import '../../isar/memo/controller.dart';
 import '../../types/MemoType.dart';
 
 /// メモ一覧を取得する
-Future<List<MemoType>?> getMemoList(String noteId) async {
+Future<List<MemoType>?> getMemoList(String noteId, {bool done = false}) async {
   final controller = MemoController();
   try {
-    final result = controller.getByNote(int.parse(noteId));
+    final result = controller.getByNote(int.parse(noteId), done: done);
     return result;
   } catch (e) {
     // todo: エラー処理

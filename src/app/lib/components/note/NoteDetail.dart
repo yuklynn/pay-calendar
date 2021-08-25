@@ -29,6 +29,7 @@ class NoteDetail extends StatelessWidget {
         delete,
         loading,
         createOrUpdateMemo,
+        doneMemo,
         deleteMemo,
       ) =>
           _NoteDetail(
@@ -41,6 +42,7 @@ class NoteDetail extends StatelessWidget {
         delete: delete,
         loading: loading,
         createOrUpdateMemo: createOrUpdateMemo,
+        doneMemo: doneMemo,
         deleteMemo: deleteMemo,
       ),
       note,
@@ -59,6 +61,7 @@ class _NoteDetail extends StatelessWidget {
   final bool loading; // ロード中か
 
   final void Function(MemoType?) createOrUpdateMemo; // メモを作成・編集する
+  final void Function(MemoType) doneMemo; // メモを完了する
   final void Function(MemoType) deleteMemo; // メモを削除する
 
   _NoteDetail({
@@ -71,6 +74,7 @@ class _NoteDetail extends StatelessWidget {
     required this.delete,
     required this.loading,
     required this.createOrUpdateMemo,
+    required this.doneMemo,
     required this.deleteMemo,
   });
 
@@ -174,7 +178,9 @@ class _NoteDetail extends StatelessWidget {
   Widget _buildTotalPayment(TextTheme textTheme) {
     var sum = 0;
     for (var memo in memos) {
-      sum += memo.cost ?? 0;
+      if (!memo.done) {
+        sum += memo.cost ?? 0;
+      }
     }
 
     final style = textTheme.subtitle1;
@@ -216,6 +222,7 @@ class _NoteDetail extends StatelessWidget {
       itemBuilder: (context, index) => MemoCard(
         memo: memos[index],
         edit: createOrUpdateMemo,
+        done: doneMemo,
         delete: deleteMemo,
       ),
       staggeredTileBuilder: (index) => StaggeredTile.fit(1),

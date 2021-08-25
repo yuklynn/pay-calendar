@@ -31,14 +31,20 @@ class MemoController {
   }
 
   /// ノートIDから一覧取得
-  Future<List<MemoType>> getByNote(int id) async {
+  Future<List<MemoType>> getByNote(int id, {bool done = false}) async {
     // ノートIDでフィルターして一覧を取得する
-    final collections =
-        await isar.memoCollections.where().filter().noteIdEqualTo(id).findAll();
+    final collections = await isar.memoCollections
+        .where()
+        .filter()
+        .noteIdEqualTo(id)
+        .and()
+        .doneEqualTo(done)
+        .findAll();
 
     // メモのデータ型のリストに変換
     final list = <MemoType>[];
     for (var collection in collections) {
+      print('${collection.title}: ${collection.done}');
       list.add(MemoType.fromCollection(collection));
     }
     return list;
@@ -52,7 +58,8 @@ class MemoController {
       ..title = memo.title
       ..cost = memo.cost
       ..date = memo.date
-      ..description = memo.description;
+      ..description = memo.description
+      ..done = memo.done;
     if (memo.id != null) collection.id = int.parse(memo.id!);
 
     await isar.writeTxn((isar) async {

@@ -171,6 +171,7 @@ class _NoteDetail extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildMemoStatusButton(theme),
+          const SizedBox(width: 10.0),
           _buildPopupMenu(),
         ],
       ),

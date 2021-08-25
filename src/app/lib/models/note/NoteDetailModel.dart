@@ -12,6 +12,7 @@ import '../../types/NoteType.dart';
 class NoteDetailModel with ChangeNotifier {
   NoteType note; // ノート
   List<MemoType> memos = []; // メモのリスト
+  bool memoStatus = false; // 表示中のメモの完了状態
   bool headerCollapsed = false; // ヘッダーが閉じているか
   late GlobalKey borderKey; // ボーダーのKey
   late ScrollController scrollController; // スクロールのコントローラー
@@ -35,7 +36,7 @@ class NoteDetailModel with ChangeNotifier {
     scrollController.addListener(_onScrolled);
 
     // メモを取得
-    final memos = await getMemoList(note.id!);
+    final memos = await getMemoList(note.id!, done: memoStatus);
     if (memos == null) return;
     this.memos = memos;
 

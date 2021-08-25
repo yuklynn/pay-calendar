@@ -11,7 +11,6 @@ class MemoCard extends StatelessWidget {
   final void Function(MemoType) edit; // メモを編集する
   final void Function(MemoType) done; // メモを完了する
   final void Function(MemoType) delete; // メモを削除する
-  static const _buttonSize = 24.0; // ボタンサイズ
   static const _padding = 8.0; // 余白サイズ
 
   /// コンストラクタ

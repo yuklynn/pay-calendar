@@ -5,6 +5,7 @@ import '../../models/home/HomeModel.dart';
 import '../components/common/DisableScrollGlow.dart';
 import '../components/home/HomeDrawer.dart';
 import '../components/note/NoteAppBar.dart';
+import '../components/note/NoteAppBarBottom.dart';
 import '../models/note/NoteAppBarModel.dart';
 import '../models/note/NoteDetailModel.dart';
 
@@ -26,7 +27,7 @@ class Home extends StatelessWidget {
         );
         return ChangeNotifierProxyProvider<HomeModel, NoteDetailModel>(
           create: (_) => NoteDetailModel(),
-          update: (_, home, prev) => prev!..note = home.shownNote,
+          update: (_, home, prev) => prev!..setNote(home.shownNote!),
           builder: (context, _) {
             return Scaffold(
               drawer: HomeDrawer(),
@@ -35,6 +36,11 @@ class Home extends StatelessWidget {
                   controller: scrollData.scrollController,
                   headerSliverBuilder: (context, __) => [
                     NoteAppBar(),
+                    // todo: ローディング表示
+                    SliverToBoxAdapter(
+                      child: const SizedBox(height: 8.0),
+                    ),
+                    NoteAppBarBottom(),
                     SliverToBoxAdapter(
                       child: Divider(key: scrollData.scrollKey),
                     ),

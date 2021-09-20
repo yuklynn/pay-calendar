@@ -1,76 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/home/HomeModel.dart';
-import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
-import '../common/CommonAppBar.dart';
 import '../common/DisableScrollGlow.dart';
-import '../note/src/MemoCard.dart';
 
-/// ホーム画面
-class Home extends StatelessWidget {
+/// ホームのドロワー
+class HomeDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return HomeModel.provider(
-      (
-        pinnedNotes,
-        shownNote,
-        memos,
-        onTapPinnedNote,
-        createMemo,
-        toCalendar,
-        toNotes,
-      ) =>
-          _Home(
-        pinnedNotes: pinnedNotes,
-        shownNote: shownNote,
-        memos: memos,
-        onTapPinnedNote: onTapPinnedNote,
-        createMemo: createMemo,
-        toCalendar: toCalendar,
-        toNotes: toNotes,
+    final data = context.select<HomeModel, HomeDrawerData>(
+      (model) => HomeDrawerData(
+        pinnedNoteList: model.pinnedNoteList,
+        shownNote: model.shownNote,
+        onTapPinnedNote: model.onTapPinnedNote,
+        toCalendarPage: () => model.toCalendarPage(context),
+        toNotePage: () => model.toNotePage(context),
       ),
     );
-  }
-}
 
-class _Home extends StatelessWidget {
-  final List<NoteType> pinnedNotes;
-  final NoteType? shownNote;
-  final List<MemoType> memos;
-  final void Function(NoteType) onTapPinnedNote;
-  final void Function() createMemo;
-  final VoidCallback toCalendar;
-  final VoidCallback toNotes;
-
-  _Home({
-    required this.pinnedNotes,
-    required this.shownNote,
-    required this.memos,
-    required this.onTapPinnedNote,
-    required this.createMemo,
-    required this.toCalendar,
-    required this.toNotes,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      drawer: _buildDrawer(context),
-      floatingActionButton: _buildFAB(),
-      body: _buildBody(),
-    );
-  }
-
-  /// ヘッダーを作る
-  AppBar _buildAppBar() {
-    return CommonAppBar();
-  }
-
-  /// ドロワーを作る
-  Widget _buildDrawer(BuildContext context) {
     return Drawer(
       child: Column(
         children: [
@@ -84,12 +32,17 @@ class _Home extends StatelessWidget {
                   children: [
                     // ピン留めしたノートのリスト
                     _buildPinnedTitle(context),
-                    ..._buildPinnedNotes(context),
+                    ..._buildPinnedNotes(
+                      context,
+                      data.pinnedNoteList,
+                      data.shownNote,
+                      data.onTapPinnedNote,
+                    ),
                     const Divider(),
 
                     // 機能メニュー
-                    _buildCalendar(context),
-                    _buildNotes(context),
+                    _buildCalendar(context, data.toCalendarPage),
+                    _buildNotes(context, data.toNotePage),
                     _buildSettings(),
                   ],
                 ),
@@ -101,9 +54,8 @@ class _Home extends StatelessWidget {
     );
   }
 
-  /// ドロワーヘッダー
+  /// todo: ドロワーヘッダーをつくる
   Widget _buildDrawerHeader() {
-    // todo:
     return UserAccountsDrawerHeader(
       margin: const EdgeInsets.only(bottom: 0.0),
       accountEmail: const SizedBox(),
@@ -111,7 +63,7 @@ class _Home extends StatelessWidget {
     );
   }
 
-  /// ドロワー内共通のアイコンを作る
+  /// ドロワー内共通のアイコンをつくる
   Widget _buildIcon({
     Widget? icon,
     Color? foregroundColor,
@@ -139,10 +91,15 @@ class _Home extends StatelessWidget {
   }
 
   /// ピン留めしたノートのリスト
-  List<Widget> _buildPinnedNotes(BuildContext context) {
+  List<Widget> _buildPinnedNotes(
+    BuildContext context,
+    List<NoteType> pinnedNoteList,
+    NoteType? shownNote,
+    void Function(NoteType) onTapPinnedNote,
+  ) {
     final list = <Widget>[];
 
-    for (var note in pinnedNotes) {
+    for (var note in pinnedNoteList) {
       list.add(
         ListTile(
           leading: _buildIcon(
@@ -170,7 +127,10 @@ class _Home extends StatelessWidget {
   }
 
   /// todo: カレンダーメニュー
-  Widget _buildCalendar(BuildContext context) {
+  Widget _buildCalendar(
+    BuildContext context,
+    VoidCallback toCalendarPage,
+  ) {
     return ListTile(
       leading: _buildIcon(
         icon: const Icon(Icons.calendar_today),
@@ -178,13 +138,13 @@ class _Home extends StatelessWidget {
       title: Text('Calendar'),
       onTap: () {
         Navigator.pop(context);
-        toCalendar();
+        toCalendarPage();
       },
     );
   }
 
   /// todo: ノートメニュー
-  Widget _buildNotes(BuildContext context) {
+  Widget _buildNotes(BuildContext context, VoidCallback toNotePage) {
     return ListTile(
       leading: _buildIcon(
         icon: const Icon(Icons.sticky_note_2),
@@ -192,7 +152,7 @@ class _Home extends StatelessWidget {
       title: Text('Notes'),
       onTap: () {
         Navigator.pop(context);
-        toNotes();
+        toNotePage();
       },
     );
   }
@@ -207,27 +167,29 @@ class _Home extends StatelessWidget {
       onTap: () {},
     );
   }
+}
 
-  Widget _buildFAB() {
-    return FloatingActionButton(
-      onPressed: createMemo,
-      child: const Icon(Icons.add),
-    );
-  }
+class HomeDrawerData {
+  /// ピン留めされたノートのリスト
+  final List<NoteType> pinnedNoteList;
 
-  /// bodyをつくる
-  Widget _buildBody() {
-    return StaggeredGridView.countBuilder(
-      crossAxisCount: 2,
-      itemCount: memos.length,
-      itemBuilder: (context, index) => MemoCard(
-        memo: memos[index],
-        edit: (_) {},
-        updateStatus: (_, __) {},
-        delete: (_) {},
-      ),
-      staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-      padding: EdgeInsets.only(bottom: 100.0),
-    );
-  }
+  /// 表示中のノート
+  final NoteType? shownNote;
+
+  /// ピン留めノートタップ時の処理
+  final void Function(NoteType) onTapPinnedNote;
+
+  /// カレンダー画面に移動する
+  final VoidCallback toCalendarPage;
+
+  /// ノート画面に移動する
+  final VoidCallback toNotePage;
+
+  HomeDrawerData({
+    required this.pinnedNoteList,
+    required this.shownNote,
+    required this.onTapPinnedNote,
+    required this.toCalendarPage,
+    required this.toNotePage,
+  });
 }

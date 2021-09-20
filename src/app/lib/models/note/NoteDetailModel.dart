@@ -10,7 +10,7 @@ import '../../types/NoteType.dart';
 
 /// ノート詳細画面のModel
 class NoteDetailModel with ChangeNotifier {
-  NoteType note; // ノート
+  NoteType? note; // ノート
   List<MemoType> memos = []; // メモのリスト
   bool memoStatus = false; // 表示中のメモの完了状態
   bool headerCollapsed = false; // ヘッダーが閉じているか
@@ -20,7 +20,7 @@ class NoteDetailModel with ChangeNotifier {
 
   /// コンストラクタ
   NoteDetailModel({
-    required this.note,
+    this.note,
   }) {
     // 初期処理
     _init();
@@ -36,9 +36,12 @@ class NoteDetailModel with ChangeNotifier {
     scrollController.addListener(_onScrolled);
 
     // メモを取得
-    final memos = await getMemoList(note.id!, done: memoStatus);
-    if (memos == null) return;
-    this.memos = memos;
+    if (note != null) {
+      print('init');
+      final memos = await getMemoList(note?.id ?? '', done: memoStatus);
+      if (memos == null) return;
+      this.memos = memos;
+    }
 
     try {
       notifyListeners();
@@ -83,7 +86,7 @@ class NoteDetailModel with ChangeNotifier {
   /// ノートを編集する
   void edit(BuildContext context) async {
     // ノート編集画面に移動する
-    final edited = await toEditNote(context, note);
+    final edited = await toEditNote(context, note!);
     if (!edited) return;
 
     // 編集されたならノートの情報を取得する
@@ -92,7 +95,7 @@ class NoteDetailModel with ChangeNotifier {
       notifyListeners();
     } catch (_) {}
 
-    final newNote = await getNote(note.id!);
+    final newNote = await getNote(note!.id!);
     if (newNote != null) note = newNote;
 
     loading = false;
@@ -108,7 +111,7 @@ class NoteDetailModel with ChangeNotifier {
     if (!ok) return;
 
     // ノートを削除する
-    final success = await deleteNote(note.id!);
+    final success = await deleteNote(note!.id!);
     if (!success) return;
 
     Navigator.pop(context);
@@ -121,7 +124,7 @@ class NoteDetailModel with ChangeNotifier {
     if (newMemo == null) return;
 
     // メモを作成
-    final result = await createOrUpdateMemo(newMemo, note.id!);
+    final result = await createOrUpdateMemo(newMemo, note!.id!);
     if (result == null) return;
 
     // メモのリストに追加
@@ -139,7 +142,7 @@ class NoteDetailModel with ChangeNotifier {
     final newMemo = memo.edit(done: done);
 
     // メモを更新
-    final result = await createOrUpdateMemo(newMemo, note.id!);
+    final result = await createOrUpdateMemo(newMemo, note!.id!);
     if (result == null) return;
 
     final index = memos.indexWhere((elem) => elem.id == newMemo.id);
@@ -189,7 +192,7 @@ class NoteDetailModel with ChangeNotifier {
     memoStatus = status;
 
     // メモを再取得
-    final result = await getMemoList(note.id!, done: status);
+    final result = await getMemoList(note!.id!, done: status);
     if (result == null) return;
 
     memos = result;
@@ -224,7 +227,7 @@ class NoteDetailModel with ChangeNotifier {
         final model = context.watch<NoteDetailModel>();
         return WillPopScope(
           child: builder(
-            model.note,
+            model.note!,
             model.memos,
             model.headerCollapsed,
             model.borderKey,

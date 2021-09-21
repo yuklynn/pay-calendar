@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../components/common/CommonAppBar.dart';
 import '../components/note/NoteListBody.dart';
 import '../components/note/NoteListFAB.dart';
-import '../models/note/NotesModel.dart';
+import '../models/note/NoteListModel.dart';
 
 /// ノート一覧画面
 class NoteList extends StatelessWidget {
@@ -12,7 +12,7 @@ class NoteList extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => NotesModel()),
+        ChangeNotifierProvider(create: (_) => NoteListModel()),
       ],
       builder: (context, _) {
         return Scaffold(

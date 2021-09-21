@@ -1,32 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../actions/note/isar_wrapper.dart';
 import '../../actions/note/navigation.dart';
 import '../../types/NoteType.dart';
 
 /// ノート一覧画面のModel
-class NotesModel with ChangeNotifier {
+class NoteListModel with ChangeNotifier {
   List<NoteType> noteList = []; // ノートのリスト
-  bool loading = false; // ロード中か
 
   /// コンストラクタ
-  NotesModel() {
+  NoteListModel() {
     // 初期処理
     _init();
   }
 
   /// 初期処理
   void _init() async {
-    loading = true;
-    try {
-      notifyListeners();
-    } catch (_) {}
-
     // ノートのリストを取得
     final notes = await getNoteList();
     if (notes != null) noteList = notes;
-    loading = false;
     try {
       notifyListeners();
     } catch (_) {}
@@ -38,7 +30,6 @@ class NotesModel with ChangeNotifier {
     final newNote = await showCreateNoteBottomSheet(context);
     if (newNote == null) return;
 
-    loading = true;
     // 未ロードの状態でリストに追加
     noteList.add(newNote);
     try {
@@ -47,7 +38,6 @@ class NotesModel with ChangeNotifier {
 
     // ノートを保存
     final result = await createOrUpdateNote(newNote);
-    loading = false;
 
     // 追加したものを置換
     if (result != null) noteList.last = result;
@@ -58,7 +48,6 @@ class NotesModel with ChangeNotifier {
 
   // ノートのピン留め状態を更新する
   void updatePin(NoteType note) async {
-    loading = true;
     try {
       notifyListeners();
     } catch (_) {}
@@ -72,7 +61,6 @@ class NotesModel with ChangeNotifier {
       final index = noteList.indexWhere((element) => element.id == result.id);
       if (index >= 0) noteList[index] = result;
     }
-    loading = false;
     try {
       notifyListeners();
     } catch (_) {}
@@ -99,31 +87,5 @@ class NotesModel with ChangeNotifier {
     try {
       notifyListeners();
     } catch (_) {}
-  }
-
-  /// Providerを取得する
-  static Widget provider(
-    Widget Function(
-      bool loading,
-      List<NoteType> notes,
-      VoidCallback createNote,
-      void Function(NoteType) updatePin,
-      void Function(NoteType) toDetail,
-    )
-        builder,
-  ) {
-    return ChangeNotifierProvider(
-      create: (_) => NotesModel(),
-      builder: (context, _) {
-        final model = context.watch<NotesModel>();
-        return builder(
-          model.loading,
-          model.noteList,
-          () => context.read<NotesModel>().createNote(context),
-          (note) => context.read<NotesModel>().updatePin(note),
-          (note) => context.read<NotesModel>().toDetail(context, note),
-        );
-      },
-    );
   }
 }

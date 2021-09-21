@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/note/NotesModel.dart';
+import '../../models/note/NoteListModel.dart';
 import '../../types/NoteType.dart';
 import '../../util/theme.dart';
 import '../common/DisableScrollGlow.dart';
@@ -11,7 +11,7 @@ import '../common/ListBottomIndicator.dart';
 class NoteListBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final data = context.select<NotesModel, NoteListBodyData>(
+    final data = context.select<NoteListModel, NoteListBodyData>(
       (model) => NoteListBodyData(
         noteList: model.noteList,
         updatePin: model.updatePin,

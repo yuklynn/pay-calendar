@@ -7,7 +7,7 @@ import '../../types/NoteType.dart';
 
 /// ノート一覧画面のModel
 class NotesModel with ChangeNotifier {
-  List<NoteType> notes = []; // ノートのリスト
+  List<NoteType> noteList = []; // ノートのリスト
   bool loading = false; // ロード中か
 
   /// コンストラクタ
@@ -25,7 +25,7 @@ class NotesModel with ChangeNotifier {
 
     // ノートのリストを取得
     final notes = await getNoteList();
-    if (notes != null) this.notes = notes;
+    if (notes != null) noteList = notes;
     loading = false;
     try {
       notifyListeners();
@@ -40,7 +40,7 @@ class NotesModel with ChangeNotifier {
 
     loading = true;
     // 未ロードの状態でリストに追加
-    notes.add(newNote);
+    noteList.add(newNote);
     try {
       notifyListeners();
     } catch (_) {}
@@ -50,7 +50,7 @@ class NotesModel with ChangeNotifier {
     loading = false;
 
     // 追加したものを置換
-    if (result != null) notes.last = result;
+    if (result != null) noteList.last = result;
     try {
       notifyListeners();
     } catch (_) {}
@@ -69,8 +69,8 @@ class NotesModel with ChangeNotifier {
 
     // リストを置換
     if (result != null) {
-      final index = notes.indexWhere((element) => element.id == result.id);
-      if (index >= 0) notes[index] = result;
+      final index = noteList.indexWhere((element) => element.id == result.id);
+      if (index >= 0) noteList[index] = result;
     }
     loading = false;
     try {
@@ -86,14 +86,14 @@ class NotesModel with ChangeNotifier {
     // 削除したならリストから削除
     // todo: アクション
     if (res == null) {
-      notes.remove(note);
+      noteList.remove(note);
     }
     // それ以外ならリストを置換
     else {
-      final index = notes.indexWhere((element) => element.id == res.id);
+      final index = noteList.indexWhere((element) => element.id == res.id);
       if (index < 0) return;
 
-      notes[index] = res;
+      noteList[index] = res;
     }
 
     try {
@@ -118,7 +118,7 @@ class NotesModel with ChangeNotifier {
         final model = context.watch<NotesModel>();
         return builder(
           model.loading,
-          model.notes,
+          model.noteList,
           () => context.read<NotesModel>().createNote(context),
           (note) => context.read<NotesModel>().updatePin(note),
           (note) => context.read<NotesModel>().toDetail(context, note),

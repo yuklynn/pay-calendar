@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pay_calendar/components/note/NoteBody.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/home/HomeModel.dart';
@@ -7,6 +6,8 @@ import '../components/common/DisableScrollGlow.dart';
 import '../components/home/HomeDrawer.dart';
 import '../components/note/NoteAppBar.dart';
 import '../components/note/NoteAppBarBottom.dart';
+import '../components/note/NoteBody.dart';
+import '../components/note/NoteFAB.dart';
 import '../models/note/NoteAppBarModel.dart';
 import '../models/note/NoteDetailModel.dart';
 
@@ -49,35 +50,13 @@ class Home extends StatelessWidget {
                   body: NoteBody(),
                 ),
               ),
+              floatingActionButton: NoteFAB(),
             );
           },
         );
       },
     );
   }
-
-  // Widget _buildFAB() {
-  //   return FloatingActionButton(
-  //     onPressed: createMemo,
-  //     child: const Icon(Icons.add),
-  //   );
-  // }
-
-  // /// bodyをつくる
-  // Widget _buildBody() {
-  //   return StaggeredGridView.countBuilder(
-  //     crossAxisCount: 2,
-  //     itemCount: memos.length,
-  //     itemBuilder: (context, index) => MemoCard(
-  //       memo: memos[index],
-  //       edit: (_) {},
-  //       updateStatus: (_, __) {},
-  //       delete: (_) {},
-  //     ),
-  //     staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-  //     padding: EdgeInsets.only(bottom: 100.0),
-  //   );
-  // }
 }
 
 class ScrollData {

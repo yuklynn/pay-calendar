@@ -29,7 +29,7 @@ class Home extends StatelessWidget {
         );
         return ChangeNotifierProxyProvider<HomeModel, NoteDetailModel>(
           create: (_) => NoteDetailModel(),
-          update: (_, home, prev) => prev!..setNote(home.shownNote!),
+          update: (_, home, prev) => prev!..setNote(home.shownNote),
           builder: (context, _) {
             return Scaffold(
               drawer: HomeDrawer(),

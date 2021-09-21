@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../components/note/CreateNoteBottomSheet.dart';
 import '../../components/note/DeleteNoteDialog.dart';
 import '../../components/note/EditNote.dart';
-import '../../components/note/NoteDetail.dart';
+import '../../pages/Note.dart';
 import '../../types/NoteType.dart';
 import '../../util/navigation_routes.dart';
 
@@ -26,7 +26,7 @@ Future<NoteType?> toNoteDetail(BuildContext context, NoteType note) async {
   return await Navigator.push<NoteType>(
     context,
     NavigationRoute.forward(
-      page: NoteDetail(note: note),
+      page: Note(note: note),
     ),
   );
 }

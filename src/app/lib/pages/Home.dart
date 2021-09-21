@@ -9,7 +9,7 @@ import '../components/note/NoteAppBarBottom.dart';
 import '../components/note/NoteBody.dart';
 import '../components/note/NoteFAB.dart';
 import '../models/note/NoteAppBarModel.dart';
-import '../models/note/NoteDetailModel.dart';
+import '../models/note/NoteModel.dart';
 
 /// ホーム画面
 class Home extends StatelessWidget {
@@ -27,8 +27,8 @@ class Home extends StatelessWidget {
             scrollController: model.scrollController,
           ),
         );
-        return ChangeNotifierProxyProvider<HomeModel, NoteDetailModel>(
-          create: (_) => NoteDetailModel(),
+        return ChangeNotifierProxyProvider<HomeModel, NoteModel>(
+          create: (_) => NoteModel(),
           update: (_, home, prev) => prev!..setNote(home.shownNote),
           builder: (context, _) {
             return Scaffold(

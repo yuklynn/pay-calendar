@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/note/NoteAppBarModel.dart';
-import '../../models/note/NoteDetailModel.dart';
+import '../../models/note/NoteModel.dart';
 import '../../util/colors.dart';
 
 /// ノートのAppBar
@@ -11,8 +11,7 @@ class NoteAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // todo: NoteModelに名前変更
-    final noteData = context.select<NoteDetailModel, NoteData>(
+    final noteData = context.select<NoteModel, NoteData>(
       (model) => NoteData(
         title: model.note?.title ?? '',
         color: model.note?.color ?? defaultColor,

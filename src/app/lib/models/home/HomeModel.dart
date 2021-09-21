@@ -33,7 +33,7 @@ class HomeModel with ChangeNotifier {
 
     // メモを取得
     if (shownNote != null) {
-      final memos = await getMemoList(shownNote!.id!);
+      final memos = await MemoIsarWrapper().getMemoList(shownNote!.id!);
       if (memos != null) this.memos = memos;
     }
 
@@ -51,7 +51,7 @@ class HomeModel with ChangeNotifier {
     shownNote = note;
 
     // メモを取得
-    final memos = await getMemoList(note.id.toString());
+    final memos = await MemoIsarWrapper().getMemoList(note.id.toString());
     if (memos != null) this.memos = memos;
 
     try {
@@ -69,7 +69,8 @@ class HomeModel with ChangeNotifier {
     if (newMemo == null) return;
 
     // メモを作成
-    final result = await createOrUpdateMemo(newMemo, shownNote!.id.toString());
+    final result = await MemoIsarWrapper()
+        .createOrUpdateMemo(newMemo, shownNote!.id.toString());
     if (result == null) return;
 
     // リストにメモを追加

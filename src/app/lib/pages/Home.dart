@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pay_calendar/components/note/NoteBody.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/home/HomeModel.dart';
@@ -45,7 +46,7 @@ class Home extends StatelessWidget {
                       child: Divider(key: scrollData.scrollKey),
                     ),
                   ],
-                  body: const SizedBox(),
+                  body: NoteBody(),
                 ),
               ),
             );

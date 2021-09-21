@@ -37,7 +37,8 @@ class NoteDetailModel with ChangeNotifier {
 
     // メモを取得
     if (note != null) {
-      final memoList = await getMemoList(note?.id ?? '', done: shownMemoStatus);
+      final memoList = await MemoIsarWrapper()
+          .getMemoList(note?.id ?? '', done: shownMemoStatus);
       if (memoList == null) return;
       this.memoList = memoList;
     }
@@ -87,7 +88,8 @@ class NoteDetailModel with ChangeNotifier {
     this.note = note;
 
     // メモを取得
-    final memoList = await getMemoList(note.id ?? '', done: shownMemoStatus);
+    final memoList = await MemoIsarWrapper()
+        .getMemoList(note.id ?? '', done: shownMemoStatus);
     if (memoList == null) return;
     this.memoList = memoList;
 
@@ -131,13 +133,14 @@ class NoteDetailModel with ChangeNotifier {
   }
 
   /// メモを作成・編集する
-  void _createOrUpdateMemo(MemoType? memo, BuildContext context) async {
+  void createOrUpdateMemo(MemoType? memo, BuildContext context) async {
     // メモ作成画面を表示
     final newMemo = await toCreateMemo(memo, context);
     if (newMemo == null) return;
 
     // メモを作成
-    final result = await createOrUpdateMemo(newMemo, note!.id!);
+    final result =
+        await MemoIsarWrapper().createOrUpdateMemo(newMemo, note!.id!);
     if (result == null) return;
 
     // メモのリストに追加
@@ -155,7 +158,8 @@ class NoteDetailModel with ChangeNotifier {
     final newMemo = memo.edit(done: done);
 
     // メモを更新
-    final result = await createOrUpdateMemo(newMemo, note!.id!);
+    final result =
+        await MemoIsarWrapper().createOrUpdateMemo(newMemo, note!.id!);
     if (result == null) return;
 
     final index = memoList.indexWhere((elem) => elem.id == newMemo.id);
@@ -177,13 +181,13 @@ class NoteDetailModel with ChangeNotifier {
   }
 
   /// メモを削除する
-  void _deleteMemo(MemoType memo, BuildContext context) async {
+  void deleteMemo(MemoType memo, BuildContext context) async {
     // ダイアログ表示
     final ok = await showDeleteMemoDialog(memo.title, context);
     if (!ok) return;
 
     // メモを削除
-    final success = await deleteMemo(memo.id!);
+    final success = await MemoIsarWrapper().deleteMemo(memo.id!);
     if (!success) return;
 
     // メモのリストからメモを削除
@@ -205,7 +209,7 @@ class NoteDetailModel with ChangeNotifier {
     shownMemoStatus = status;
 
     // メモを再取得
-    final result = await getMemoList(note!.id!, done: status);
+    final result = await MemoIsarWrapper().getMemoList(note!.id!, done: status);
     if (result == null) return;
 
     memoList = result;
@@ -250,11 +254,10 @@ class NoteDetailModel with ChangeNotifier {
             model.loading,
             (memo) => context
                 .read<NoteDetailModel>()
-                ._createOrUpdateMemo(memo, context),
+                .createOrUpdateMemo(memo, context),
             (memo, done) =>
                 context.read<NoteDetailModel>().updateMemoStatus(memo, done),
-            (memo) =>
-                context.read<NoteDetailModel>()._deleteMemo(memo, context),
+            (memo) => context.read<NoteDetailModel>().deleteMemo(memo, context),
             model.shownMemoStatus,
             (status) =>
                 context.read<NoteDetailModel>().switchShownMemoStatus(status),

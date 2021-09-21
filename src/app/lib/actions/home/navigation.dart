@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../components/calendar/Calendar.dart';
-import '../../components/note/Notes.dart';
+import '../../pages/NoteList.dart';
 import '../../util/navigation_routes.dart';
 
 /// カレンダーに移動する
@@ -19,7 +19,7 @@ Future<void> toNotes(BuildContext context) async {
   await Navigator.push(
     context,
     NavigationRoute.forward(
-      page: Notes(),
+      page: NoteList(),
     ),
   );
 }

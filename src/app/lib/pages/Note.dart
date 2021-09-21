@@ -32,24 +32,33 @@ class Note extends StatelessWidget {
             scrollController: model.scrollController,
           ),
         );
-        return Scaffold(
-          body: DisableScrollGlow(
-            child: NestedScrollView(
-              controller: scrollData.scrollController,
-              headerSliverBuilder: (context, __) => [
-                NoteAppBar(),
-                SliverToBoxAdapter(
-                  child: const SizedBox(height: 8.0),
-                ),
-                NoteAppBarBottom(),
-                SliverToBoxAdapter(
-                  child: Divider(key: scrollData.scrollKey),
-                ),
-              ],
-              body: NoteBody(),
+        final note = context.select<NoteModel, NoteType>(
+          (model) => model.note!,
+        );
+        return WillPopScope(
+          onWillPop: () async {
+            Navigator.pop(context, note);
+            return true;
+          },
+          child: Scaffold(
+            body: DisableScrollGlow(
+              child: NestedScrollView(
+                controller: scrollData.scrollController,
+                headerSliverBuilder: (context, __) => [
+                  NoteAppBar(),
+                  SliverToBoxAdapter(
+                    child: const SizedBox(height: 8.0),
+                  ),
+                  NoteAppBarBottom(),
+                  SliverToBoxAdapter(
+                    child: Divider(key: scrollData.scrollKey),
+                  ),
+                ],
+                body: NoteBody(),
+              ),
             ),
+            floatingActionButton: NoteFAB(),
           ),
-          floatingActionButton: NoteFAB(),
         );
       },
     );

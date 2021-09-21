@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../common/CommonAppBar.dart';
+import '../components/common/CommonAppBar.dart';
 
-/// カレンダーの表示Widget
+/// カレンダー画面
 class Calendar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return _Calendar();
-  }
-}
-
-class _Calendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

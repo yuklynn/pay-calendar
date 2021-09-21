@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'CalendarDayCell.dart';
 import 'CalendarWeekCell.dart';
 
 /// カレンダーのbody
@@ -39,19 +40,9 @@ class CalendarBody extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: 7,
           childAspectRatio: width / height,
-          children: List.filled(7 * 6, _dateCell()),
+          children: List.filled(7 * 6, CalendarDayCell(date: DateTime.now())),
         );
       },
-    );
-  }
-
-  /// 日付のセル
-  Widget _dateCell() {
-    // todo: 中身
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(width: 0.1, color: Colors.grey),
-      ),
     );
   }
 }

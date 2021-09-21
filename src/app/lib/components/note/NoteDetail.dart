@@ -6,7 +6,7 @@ import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
 import '../../util/functions.dart';
 import '../common/DisableScrollGlow.dart';
-import 'src/MemoCard.dart';
+import 'NoteBodyCard.dart';
 
 /// ノート詳細画面
 class NoteDetail extends StatelessWidget {
@@ -264,7 +264,7 @@ class _NoteDetail extends StatelessWidget {
     return StaggeredGridView.countBuilder(
       crossAxisCount: 2,
       itemCount: memos.length,
-      itemBuilder: (context, index) => MemoCard(
+      itemBuilder: (context, index) => NoteBodyCard(
         memo: memos[index],
         edit: createOrUpdateMemo,
         updateStatus: updateMemoStatus,

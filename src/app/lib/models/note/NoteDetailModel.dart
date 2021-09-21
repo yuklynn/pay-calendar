@@ -10,9 +10,9 @@ import '../../types/NoteType.dart';
 
 /// ノート詳細画面のModel
 class NoteDetailModel with ChangeNotifier {
-  NoteType note; // ノート
-  List<MemoType> memos = []; // メモのリスト
-  bool memoStatus = false; // 表示中のメモの完了状態
+  NoteType? note; // ノート
+  List<MemoType> memoList = []; // メモのリスト
+  bool shownMemoStatus = false; // 表示中のメモのステータス
   bool headerCollapsed = false; // ヘッダーが閉じているか
   late GlobalKey borderKey; // ボーダーのKey
   late ScrollController scrollController; // スクロールのコントローラー
@@ -20,7 +20,7 @@ class NoteDetailModel with ChangeNotifier {
 
   /// コンストラクタ
   NoteDetailModel({
-    required this.note,
+    this.note,
   }) {
     // 初期処理
     _init();
@@ -36,9 +36,12 @@ class NoteDetailModel with ChangeNotifier {
     scrollController.addListener(_onScrolled);
 
     // メモを取得
-    final memos = await getMemoList(note.id!, done: memoStatus);
-    if (memos == null) return;
-    this.memos = memos;
+    if (note != null) {
+      final memoList = await MemoIsarWrapper()
+          .getMemoList(note?.id ?? '', done: shownMemoStatus);
+      if (memoList == null) return;
+      this.memoList = memoList;
+    }
 
     try {
       notifyListeners();
@@ -80,10 +83,25 @@ class NoteDetailModel with ChangeNotifier {
     }
   }
 
+  /// 外部からノートをセットする
+  void setNote(NoteType note) async {
+    this.note = note;
+
+    // メモを取得
+    final memoList = await MemoIsarWrapper()
+        .getMemoList(note.id ?? '', done: shownMemoStatus);
+    if (memoList == null) return;
+    this.memoList = memoList;
+
+    try {
+      notifyListeners();
+    } catch (_) {}
+  }
+
   /// ノートを編集する
   void edit(BuildContext context) async {
     // ノート編集画面に移動する
-    final edited = await toEditNote(context, note);
+    final edited = await toEditNote(context, note!);
     if (!edited) return;
 
     // 編集されたならノートの情報を取得する
@@ -92,7 +110,7 @@ class NoteDetailModel with ChangeNotifier {
       notifyListeners();
     } catch (_) {}
 
-    final newNote = await getNote(note.id!);
+    final newNote = await getNote(note!.id!);
     if (newNote != null) note = newNote;
 
     loading = false;
@@ -108,26 +126,27 @@ class NoteDetailModel with ChangeNotifier {
     if (!ok) return;
 
     // ノートを削除する
-    final success = await deleteNote(note.id!);
+    final success = await deleteNote(note!.id!);
     if (!success) return;
 
     Navigator.pop(context);
   }
 
   /// メモを作成・編集する
-  void _createOrUpdateMemo(MemoType? memo, BuildContext context) async {
+  void createOrUpdateMemo(MemoType? memo, BuildContext context) async {
     // メモ作成画面を表示
     final newMemo = await toCreateMemo(memo, context);
     if (newMemo == null) return;
 
     // メモを作成
-    final result = await createOrUpdateMemo(newMemo, note.id!);
+    final result =
+        await MemoIsarWrapper().createOrUpdateMemo(newMemo, note!.id!);
     if (result == null) return;
 
     // メモのリストに追加
-    final index = memos.indexWhere((elem) => elem.id == result.id);
+    final index = memoList.indexWhere((elem) => elem.id == result.id);
 
-    index < 0 ? memos.add(result) : memos[index] = result;
+    index < 0 ? memoList.add(result) : memoList[index] = result;
     try {
       notifyListeners();
     } catch (_) {}
@@ -139,42 +158,43 @@ class NoteDetailModel with ChangeNotifier {
     final newMemo = memo.edit(done: done);
 
     // メモを更新
-    final result = await createOrUpdateMemo(newMemo, note.id!);
+    final result =
+        await MemoIsarWrapper().createOrUpdateMemo(newMemo, note!.id!);
     if (result == null) return;
 
-    final index = memos.indexWhere((elem) => elem.id == newMemo.id);
+    final index = memoList.indexWhere((elem) => elem.id == newMemo.id);
     if (index < 0) return;
 
     // LikeButtonを使っているので不要
     // 一瞬だけ置換する
-    // memos[index] = result;
+    // memoList[index] = result;
     // try {
     //   notifyListeners();
     // } catch (_) {}
 
     // 少し待ってメモのリストから削除
     await Future<void>.delayed(const Duration(milliseconds: 750));
-    memos.removeAt(index);
+    memoList.removeAt(index);
     try {
       notifyListeners();
     } catch (_) {}
   }
 
   /// メモを削除する
-  void _deleteMemo(MemoType memo, BuildContext context) async {
+  void deleteMemo(MemoType memo, BuildContext context) async {
     // ダイアログ表示
     final ok = await showDeleteMemoDialog(memo.title, context);
     if (!ok) return;
 
     // メモを削除
-    final success = await deleteMemo(memo.id!);
+    final success = await MemoIsarWrapper().deleteMemo(memo.id!);
     if (!success) return;
 
     // メモのリストからメモを削除
-    final index = memos.indexWhere((elem) => elem.id == memo.id);
+    final index = memoList.indexWhere((elem) => elem.id == memo.id);
     if (index < 0) return;
 
-    memos.removeAt(index);
+    memoList.removeAt(index);
     try {
       notifyListeners();
     } catch (_) {}
@@ -183,16 +203,16 @@ class NoteDetailModel with ChangeNotifier {
   /// 表示メモのステータスを変更する
   void switchShownMemoStatus(bool status) async {
     // ステータスに変更なしなら何もしない
-    if (memoStatus == status) return;
+    if (shownMemoStatus == status) return;
 
     // ステータス変更
-    memoStatus = status;
+    shownMemoStatus = status;
 
     // メモを再取得
-    final result = await getMemoList(note.id!, done: status);
+    final result = await MemoIsarWrapper().getMemoList(note!.id!, done: status);
     if (result == null) return;
 
-    memos = result;
+    memoList = result;
     try {
       notifyListeners();
     } catch (_) {}
@@ -224,8 +244,8 @@ class NoteDetailModel with ChangeNotifier {
         final model = context.watch<NoteDetailModel>();
         return WillPopScope(
           child: builder(
-            model.note,
-            model.memos,
+            model.note!,
+            model.memoList,
             model.headerCollapsed,
             model.borderKey,
             model.scrollController,
@@ -234,12 +254,11 @@ class NoteDetailModel with ChangeNotifier {
             model.loading,
             (memo) => context
                 .read<NoteDetailModel>()
-                ._createOrUpdateMemo(memo, context),
+                .createOrUpdateMemo(memo, context),
             (memo, done) =>
                 context.read<NoteDetailModel>().updateMemoStatus(memo, done),
-            (memo) =>
-                context.read<NoteDetailModel>()._deleteMemo(memo, context),
-            model.memoStatus,
+            (memo) => context.read<NoteDetailModel>().deleteMemo(memo, context),
+            model.shownMemoStatus,
             (status) =>
                 context.read<NoteDetailModel>().switchShownMemoStatus(status),
           ),

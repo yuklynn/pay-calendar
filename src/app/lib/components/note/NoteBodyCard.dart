@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 
-import '../../../types/MemoType.dart';
-import '../../../util/functions.dart';
+import '../../types/MemoType.dart';
+import '../../util/functions.dart';
 
 /// メモカードの表示Widget
-class MemoCard extends StatelessWidget {
+class NoteBodyCard extends StatelessWidget {
   final MemoType memo; // メモの情報
   final void Function(MemoType) edit; // メモを編集する
   final void Function(MemoType, bool) updateStatus; // メモのステータスを変更する
@@ -14,7 +14,7 @@ class MemoCard extends StatelessWidget {
   static const _padding = 8.0; // 余白サイズ
 
   /// コンストラクタ
-  MemoCard({
+  NoteBodyCard({
     required this.memo,
     required this.edit,
     required this.updateStatus,

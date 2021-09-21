@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'CalendarWeekCell.dart';
+
 /// カレンダーのbody
 class CalendarBody extends StatelessWidget {
   const CalendarBody({Key? key}) : super(key: key);
@@ -10,7 +12,9 @@ class CalendarBody extends StatelessWidget {
 
     return Column(
       children: [
+        const SizedBox(height: 8.0),
         _buildHeader(theme.textTheme),
+        const SizedBox(height: 8.0),
         Expanded(child: _buildCalendar()),
       ],
     );
@@ -18,20 +22,9 @@ class CalendarBody extends StatelessWidget {
 
   /// ヘッダー部分をつくる
   Widget _buildHeader(TextTheme textTheme) {
-    // 曜日のテキスト配列
-    final weekdays = [
-      'S',
-      'M',
-      'T',
-      'W',
-      'T',
-      'F',
-      'S',
-    ];
-
     return Row(
-      children: weekdays.map((wd) {
-        return Expanded(child: _weekCell(wd, textTheme));
+      children: Weekdays.values.map((wd) {
+        return Expanded(child: CalendarWeekCell(weekday: wd));
       }).toList(),
     );
   }
@@ -48,22 +41,6 @@ class CalendarBody extends StatelessWidget {
           children: List.filled(7 * 6, _dateCell()),
         );
       },
-    );
-  }
-
-  /// 曜日のセル
-  Widget _weekCell(String weekday, TextTheme textTheme) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Center(
-        child: Text(
-          weekday,
-          style: textTheme.caption!.copyWith(fontWeight: FontWeight.bold),
-        ),
-      ),
-      decoration: BoxDecoration(
-        border: Border.all(width: 0.1, color: Colors.grey),
-      ),
     );
   }
 

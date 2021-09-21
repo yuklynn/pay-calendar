@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../actions/memo/isar_wrapper.dart';
 import '../../actions/memo/navigation.dart';
@@ -8,18 +7,14 @@ import '../../actions/note/navigation.dart';
 import '../../types/MemoType.dart';
 import '../../types/NoteType.dart';
 
-/// ノート詳細画面のModel
-class NoteDetailModel with ChangeNotifier {
+/// ノートのModel
+class NoteModel with ChangeNotifier {
   NoteType? note; // ノート
   List<MemoType> memoList = []; // メモのリスト
   bool shownMemoStatus = false; // 表示中のメモのステータス
-  bool headerCollapsed = false; // ヘッダーが閉じているか
-  late GlobalKey borderKey; // ボーダーのKey
-  late ScrollController scrollController; // スクロールのコントローラー
-  bool loading = false; // ノートの詳細をロード済みか
 
   /// コンストラクタ
-  NoteDetailModel({
+  NoteModel({
     this.note,
   }) {
     // 初期処理
@@ -28,13 +23,6 @@ class NoteDetailModel with ChangeNotifier {
 
   /// 初期処理
   void _init() async {
-    // キー作成
-    borderKey = GlobalKey();
-
-    // コントローラー作成
-    scrollController = ScrollController();
-    scrollController.addListener(_onScrolled);
-
     // メモを取得
     if (note != null) {
       final memoList = await MemoIsarWrapper()
@@ -46,41 +34,6 @@ class NoteDetailModel with ChangeNotifier {
     try {
       notifyListeners();
     } catch (_) {}
-  }
-
-  @override
-  void dispose() {
-    // コントローラー破棄
-    scrollController.dispose();
-
-    super.dispose();
-  }
-
-  /// 画面スクロール時の処理
-  void _onScrolled() {
-    // ボーダーの位置取得
-    final border = borderKey.currentContext?.findRenderObject();
-    if (border == null) return;
-    final offset = (border as RenderBox).localToGlobal(Offset.zero);
-    final topLimit = kToolbarHeight + AppBar().preferredSize.height;
-
-    // ヘッダー開閉フラグの切り替え
-    if (offset.dy < topLimit) {
-      if (!headerCollapsed) {
-        headerCollapsed = true;
-        try {
-          notifyListeners();
-        } catch (_) {}
-      }
-    }
-    if (offset.dy > topLimit) {
-      if (headerCollapsed) {
-        headerCollapsed = false;
-        try {
-          notifyListeners();
-        } catch (_) {}
-      }
-    }
   }
 
   /// 外部からノートをセットする
@@ -105,15 +58,9 @@ class NoteDetailModel with ChangeNotifier {
     if (!edited) return;
 
     // 編集されたならノートの情報を取得する
-    loading = true;
-    try {
-      notifyListeners();
-    } catch (_) {}
-
     final newNote = await getNote(note!.id!);
     if (newNote != null) note = newNote;
 
-    loading = false;
     try {
       notifyListeners();
     } catch (_) {}
@@ -216,58 +163,5 @@ class NoteDetailModel with ChangeNotifier {
     try {
       notifyListeners();
     } catch (_) {}
-  }
-
-  /// Providerを取得する
-  static Widget provider(
-    Widget Function(
-      NoteType,
-      List<MemoType>,
-      bool,
-      GlobalKey,
-      ScrollController,
-      VoidCallback,
-      VoidCallback,
-      bool,
-      void Function(MemoType?),
-      void Function(MemoType, bool),
-      void Function(MemoType),
-      bool shownMemoStatus,
-      void Function(bool),
-    )
-        builder,
-    NoteType note,
-  ) {
-    return ChangeNotifierProvider(
-      create: (context) => NoteDetailModel(note: note),
-      builder: (context, _) {
-        final model = context.watch<NoteDetailModel>();
-        return WillPopScope(
-          child: builder(
-            model.note!,
-            model.memoList,
-            model.headerCollapsed,
-            model.borderKey,
-            model.scrollController,
-            () => context.read<NoteDetailModel>().edit(context),
-            () => context.read<NoteDetailModel>().delete(context),
-            model.loading,
-            (memo) => context
-                .read<NoteDetailModel>()
-                .createOrUpdateMemo(memo, context),
-            (memo, done) =>
-                context.read<NoteDetailModel>().updateMemoStatus(memo, done),
-            (memo) => context.read<NoteDetailModel>().deleteMemo(memo, context),
-            model.shownMemoStatus,
-            (status) =>
-                context.read<NoteDetailModel>().switchShownMemoStatus(status),
-          ),
-          onWillPop: () async {
-            Navigator.pop(context, model.note);
-            return true;
-          },
-        );
-      },
-    );
   }
 }

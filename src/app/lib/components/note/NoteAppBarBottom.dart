@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/note/NoteDetailModel.dart';
+import '../../models/note/NoteModel.dart';
 import '../../types/MemoType.dart';
 import '../../util/functions.dart';
 
@@ -9,8 +9,7 @@ import '../../util/functions.dart';
 class NoteAppBarBottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // todo: NoteModelに名前を変える
-    final data = context.select<NoteDetailModel, NoteAppBarBottomData>(
+    final data = context.select<NoteModel, NoteAppBarBottomData>(
       (model) => NoteAppBarBottomData(
         title: model.note?.title ?? '',
         description: model.note?.description ?? '',

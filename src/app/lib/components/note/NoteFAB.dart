@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/note/NoteDetailModel.dart';
+import '../../models/note/NoteModel.dart';
 
 /// ノートのFAB
 class NoteFAB extends StatelessWidget {
@@ -9,7 +9,7 @@ class NoteFAB extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () =>
-          context.read<NoteDetailModel>().createOrUpdateMemo(null, context),
+          context.read<NoteModel>().createOrUpdateMemo(null, context),
       child: const Icon(Icons.post_add),
     );
   }

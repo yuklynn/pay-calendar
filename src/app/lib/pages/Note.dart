@@ -7,7 +7,7 @@ import '../components/note/NoteAppBarBottom.dart';
 import '../components/note/NoteBody.dart';
 import '../components/note/NoteFAB.dart';
 import '../models/note/NoteAppBarModel.dart';
-import '../models/note/NoteDetailModel.dart';
+import '../models/note/NoteModel.dart';
 import '../types/NoteType.dart';
 
 /// ノート画面
@@ -22,7 +22,7 @@ class Note extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => NoteDetailModel(note: note)),
+        ChangeNotifierProvider(create: (_) => NoteModel(note: note)),
         ChangeNotifierProvider(create: (_) => NoteAppBarModel()),
       ],
       builder: (context, _) {

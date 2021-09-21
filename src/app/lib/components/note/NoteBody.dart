@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/note/NoteDetailModel.dart';
+import '../../models/note/NoteModel.dart';
 import '../../types/MemoType.dart';
 import 'NoteBodyCard.dart';
 
@@ -10,8 +10,7 @@ import 'NoteBodyCard.dart';
 class NoteBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // todo: NoteModelに名前を変更
-    final data = context.select<NoteDetailModel, NoteBodyData>(
+    final data = context.select<NoteModel, NoteBodyData>(
       (model) => NoteBodyData(
         memoList: model.memoList,
         createOrUpdateMemo: (memo) => model.createOrUpdateMemo(memo, context),

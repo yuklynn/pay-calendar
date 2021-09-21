@@ -37,7 +37,9 @@ class NoteModel with ChangeNotifier {
   }
 
   /// 外部からノートをセットする
-  void setNote(NoteType note) async {
+  void setNote(NoteType? note) async {
+    if (note == null) return;
+
     this.note = note;
 
     // メモを取得

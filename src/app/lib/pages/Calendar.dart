@@ -22,13 +22,23 @@ class Calendar extends StatelessWidget {
             pageController: model.pageController,
             dateRange: model.dateRange,
             currentDate: model.currentDate,
+            currentIndex: model.currentIndex,
             onPageChanged: model.onPageChanged,
+            jumpToToday: model.jumpToToday,
           ),
         );
 
         return Scaffold(
           appBar: CommonAppBar(
             title: Text(getShownMonthStr(data.currentDate)),
+            actions: [
+              if (data.currentIndex != 12)
+                TextButton.icon(
+                  onPressed: data.jumpToToday,
+                  icon: const Icon(Icons.today),
+                  label: const Text('TODAY'), // todo: 文言
+                ),
+            ],
           ),
           body: PageView.builder(
             controller: data.pageController,
@@ -51,12 +61,16 @@ class CalendarData {
   final PageController pageController;
   final List<DateTime> dateRange;
   final DateTime currentDate;
+  final int currentIndex;
   final void Function(int) onPageChanged;
+  final VoidCallback jumpToToday;
 
   CalendarData({
     required this.pageController,
     required this.dateRange,
     required this.currentDate,
+    required this.currentIndex,
     required this.onPageChanged,
+    required this.jumpToToday,
   });
 }

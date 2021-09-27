@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:flutter/material.dart';
 
 /// カレンダー画面のModel
@@ -53,6 +55,9 @@ class CalendarModel with ChangeNotifier {
 
   /// ページ変更時の処理
   void onPageChanged(int index) {
+    // ページジャンプなら何もしない
+    if ((index - currentIndex).abs() != 1) return;
+
     // 表示中の日付を変更
     currentDate = DateTime(
       dateRange[index].year,
@@ -112,7 +117,7 @@ class CalendarModel with ChangeNotifier {
     }
   }
 
-  /// 今月の日付リストを取得
+  /// 来月の日付リストを取得
   void _getDateListOnNextMonth() {
     final begin = DateTime(currentDate.year, currentDate.month + 1, 1);
     final beginWeekDay = begin.weekday % 7; // 日曜日が0になるようにする
@@ -126,5 +131,29 @@ class CalendarModel with ChangeNotifier {
       final date = DateTime(firstDay.year, firstDay.month, firstDay.day + i);
       dateListOnNextMonth.add(date);
     }
+  }
+
+  /// 今月に戻る
+  void jumpToToday() {
+    // ページジャンプ
+    pageController.animateToPage(
+      12,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOutSine,
+    );
+    currentIndex = 12;
+
+    // 現在の日付更新
+    final today = DateTime.now();
+    currentDate = DateTime(today.year, today.month, today.day);
+
+    // 前月～来月の日付を取得
+    _getDateListOnPreviousMonth();
+    _getDateListOnCurrentMonth();
+    _getDateListOnNextMonth();
+
+    try {
+      notifyListeners();
+    } catch (_) {}
   }
 }

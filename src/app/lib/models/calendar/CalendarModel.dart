@@ -90,7 +90,7 @@ class CalendarModel with ChangeNotifier {
       begin.day - beginWeekDay,
     );
     dateListOnPreviousMonth.clear();
-    for (var i = 0; i < 7 * 5; i++) {
+    for (var i = 0; i < 7 * 6; i++) {
       final date = DateTime(firstDay.year, firstDay.month, firstDay.day + i);
       dateListOnPreviousMonth.add(date);
     }
@@ -106,7 +106,7 @@ class CalendarModel with ChangeNotifier {
       begin.day - beginWeekDay,
     );
     dateListOnCurrentMonth.clear();
-    for (var i = 0; i < 7 * 5; i++) {
+    for (var i = 0; i < 7 * 6; i++) {
       final date = DateTime(firstDay.year, firstDay.month, firstDay.day + i);
       dateListOnCurrentMonth.add(date);
     }
@@ -122,7 +122,7 @@ class CalendarModel with ChangeNotifier {
       begin.day - beginWeekDay,
     );
     dateListOnNextMonth.clear();
-    for (var i = 0; i < 7 * 5; i++) {
+    for (var i = 0; i < 7 * 6; i++) {
       final date = DateTime(firstDay.year, firstDay.month, firstDay.day + i);
       dateListOnNextMonth.add(date);
     }

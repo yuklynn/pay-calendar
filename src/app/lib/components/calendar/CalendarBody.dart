@@ -40,7 +40,7 @@ class CalendarBody extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth / 7;
-        final height = constraints.maxHeight / 5;
+        final height = constraints.maxHeight / 6;
         return GridView.count(
           physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: 7,

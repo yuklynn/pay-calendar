@@ -63,14 +63,14 @@ class CalendarModel with ChangeNotifier {
     // 前月~今月の日付リストを取得
     // 進むとき
     if (index > currentIndex) {
-      dateListOnPreviousMonth = dateListOnCurrentMonth;
-      dateListOnCurrentMonth = dateListOnNextMonth;
+      dateListOnPreviousMonth = [...dateListOnCurrentMonth];
+      dateListOnCurrentMonth = [...dateListOnNextMonth];
       _getDateListOnNextMonth();
     }
     // 戻るとき
     else {
-      dateListOnNextMonth = dateListOnCurrentMonth;
-      dateListOnCurrentMonth = dateListOnPreviousMonth;
+      dateListOnNextMonth = [...dateListOnCurrentMonth];
+      dateListOnCurrentMonth = [...dateListOnPreviousMonth];
       _getDateListOnPreviousMonth();
     }
 

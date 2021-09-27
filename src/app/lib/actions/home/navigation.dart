@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../components/calendar/Calendar.dart';
+import '../../pages/Calendar.dart';
 import '../../pages/NoteList.dart';
 import '../../util/navigation_routes.dart';
 
